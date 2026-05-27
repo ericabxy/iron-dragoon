@@ -81,6 +81,9 @@ function programs.flush_objects()
 end
 
 function programs.spawn_bullet(o)
+  o = o or {}
+  o.space_width = graphics.space_width
+  o.space_height = graphics.space_height
   local object = bullet:new(o)
   table.insert(bullets_t, object)
   table.insert(graphics.sprites_layer_0, object)
@@ -88,6 +91,9 @@ function programs.spawn_bullet(o)
 end
 
 function programs.spawn_debris(o)
+  o = o or {}
+  o.space_width = graphics.space_width
+  o.space_height = graphics.space_height
   local object = debris:new(o):init()
   table.insert(debris_t, object)
   table.insert(graphics.sprites_layer_1, object)

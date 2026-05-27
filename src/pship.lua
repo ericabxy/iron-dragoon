@@ -10,6 +10,8 @@ local exhaust_offset = {
 
 local pship = pship2sprite:new{
   invincibility_timer = 0,
+  space_width = 256,
+  space_height = 256,
   hit_points = 64,
   firing_angle = 0,
   heading_n = 0,
@@ -40,8 +42,8 @@ function pship:accelerate(dt)
 end
 
 function pship:move(dt)
-  self.x = (self.x + self.dx * dt) % 256
-  self.y = (self.y + self.dy * dt) % 256
+  self.x = (self.x + self.dx * dt) % self.space_width
+  self.y = (self.y + self.dy * dt) % self.space_height
   self.dx = self.dx * 0.97
   self.dy = self.dy * 0.97
   self.exhaust.x = self.x

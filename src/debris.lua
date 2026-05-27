@@ -7,6 +7,8 @@ local SMALL = 0
 
 -- class table
 local debris = debris_sprite:new{
+  space_width = 256,
+  space_height = 256,
   size = LARGE,
   dx = 0,
   dy = 0,
@@ -30,8 +32,8 @@ end
 
 -- Move according to momentum and update graphics
 function debris:move(dt)
-  self.x = (self.x + self.dx * dt) % 256
-  self.y = (self.y + self.dy * dt) % 256
+  self.x = (self.x + self.dx * dt) % self.space_width
+  self.y = (self.y + self.dy * dt) % self.space_height
   self:animate(dt)
 end
 

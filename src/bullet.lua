@@ -1,6 +1,8 @@
 local bulletsprite = require('src.bulletsprite')
 
 local bullet = bulletsprite:new{
+  space_width = 256,
+  space_height = 256,
   time_to_live = 750,
   angle = 0,
   speed = 250,
@@ -14,8 +16,8 @@ function bullet:init()
 end
 
 function bullet:move(dt)
-  self.x = (self.x + math.cos(self.angle) * self.speed * dt) % 256
-  self.y = (self.y + math.sin(self.angle) * self.speed * dt) % 240
+  self.x = (self.x + math.cos(self.angle) * self.speed * dt) % self.space_width
+  self.y = (self.y + math.sin(self.angle) * self.speed * dt) % self.space_height
   self.time_to_live = self.time_to_live - dt * 1000
   if self.time_to_live < 0 then
     self.remove_me_from_all_lists = true

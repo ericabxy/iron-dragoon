@@ -1,9 +1,11 @@
 local graphics = require('graphics')
 local programs = require('programs')
 local game01 = require('game01')
+local game02 = require('game02')
 
 local bullet_laser = love.audio.newSource('share/sfx_wpn_laser1.wav', 'static')
 local vehicle_loop = love.audio.newSource('share/sfx_vehicle_plainloop.wav', 'static')
+vehicle_loop:setLooping(true)
 
 require('const')
 
@@ -24,7 +26,7 @@ function love.update(dt)
     player0:rotate(dt)
   end
   if love.joystick.isDown(1, RETRO_DEVICE_ID_JOYPAD_UP) then
-    love.audio.play(vehicle_loop)
+    if vehicle_loop:isPaused() or vehicle_loop:isStopped() then love.audio.play(vehicle_loop) end
     player0:accelerate(dt)
   else
     love.audio.stop(vehicle_loop)
