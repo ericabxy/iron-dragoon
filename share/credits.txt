@@ -1,0 +1,34 @@
+Credits
+=======
+
+Assets are all provided with a free license for use, modification, and distribution.
+
+[Iron Plague graphics](https://lostgarden.com/2005/03/30/download-a-complete-set-of-sweet-8-bit-sinistar-clone-graphics/) by [Daniel Cook](https://lostgarden.com/). Licensed CC-BY 3.0.
+
+- "exhaust2_large.png"
+- "exhaust2_medium.png"
+- "exhaust2_small.png"
+- "iron_plague_bullet_fester.png"
+- "iron_plague_bullet_flame.png"
+- "iron_plague_bullet_frost.png"
+- "iron_plague_debris1.png"
+- "iron_plague_debris2.png"
+- "iron_plague_debris3.png"
+- "iron_plague_explode1.png"
+- "iron_plague_explode2.png"
+- "pship2_transparent.png"
+- "pship_transparent.png"
+
+[Sound Effects](https://opengameart.org/content/512-sound-effects-8-bit-style) by [SubspaceAudio](https://subspaceaudio.itch.io/). Licensed CC0.
+
+- "sfx_exp_shortest_hard1.wav"
+- "sfx_vehicle_plainloop.wav"
+- "sfx_wpn_laser1.wav"
+
+["Space" background](https://opengameart.org/content/space-9) by [Pavel Kutejnikov](https://opengameart.org/users/kutejnikov). Licensed CCO.
+
+- "space.png"
+
+["Futuristic" font](https://opengameart.org/content/ascii-bitmap-font-futuristic) by domsson. Licensed CC0.
+
+- "charmap-futuristic_white-imagefont.png"

@@ -1,0 +1,36 @@
+local sprite = require('src.sprite')
+
+local bulletsprite = sprite:new{
+  texture = love.graphics.newImage('share/iron_plague_bullet_flame.png'),
+  quad = love.graphics.newQuad(24, 12, 13, 13, 64, 64),
+  quads = {},
+  ox = -7,
+  oy = -7,
+  x = 0,
+  y = 0,
+}
+
+bulletsprite.quads[0] = bulletsprite.quad
+bulletsprite.quads[1] = love.graphics.newQuad(24, 24, 13, 13, 64, 64)
+bulletsprite.quads[2] = love.graphics.newQuad(12, 24, 13, 13, 64, 64)
+bulletsprite.quads[3] = love.graphics.newQuad(0, 24, 13, 13, 64, 64)
+bulletsprite.quads[4] = love.graphics.newQuad(0, 12, 13, 13, 64, 64)
+bulletsprite.quads[5] = love.graphics.newQuad(0, 0, 13, 13, 64, 64)
+bulletsprite.quads[6] = love.graphics.newQuad(12, 0, 13, 13, 64, 64)
+bulletsprite.quads[7] = love.graphics.newQuad(24, 0, 13, 13, 64, 64)
+
+function bulletsprite:shift(ox, oy)
+  for _, quad in ipairs(self.quads) do
+    local x, y, w, h = quad:getViewport()
+    quad:setViewport(x, y, w, h)
+  end
+end
+
+function bulletsprite:new(o)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+return bulletsprite
