@@ -14,6 +14,11 @@ for x = -256, 1024 + 256, 256 do
 end
 
 function game02.start()
+  graphics.flush_sprites()
+  programs.flush_objects()
+  programs.players_t = {}
+  programs.bullets_t = {}
+  programs.debris_t = {}
   graphics.origin_x = -256
   graphics.origin_y = -256
   graphics.space_width = 1024

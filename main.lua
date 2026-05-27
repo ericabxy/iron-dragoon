@@ -46,7 +46,9 @@ function love.keypressed(key)
     love.event.quit()
   elseif key == 'return' then
     love.load()
-  elseif key == 'down' then
-    player0.hit_points = player0.hit_points - 1
+  elseif key == '1' then
+    player0 = game01.start()
+  elseif key == '2' then
+    player0 = game02.start()
   end
 end
