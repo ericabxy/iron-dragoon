@@ -1,5 +1,6 @@
 local exhaust2sprite = require('src.exhaust2sprite')
 local pship2sprite = require('src.pship2sprite')
+local vehicle_plainloop = require('src.vehicle_plainloop')
 
 local exhaust_offset = {
   [0] = { x = -19, y = -9 }, { x = -19, y = -13 }, { x = -17, y = -17 }, { x = -13, y = -19 },
@@ -23,6 +24,7 @@ local pship = pship2sprite:new{
 
 function pship:init()
   self.exhaust = exhaust2sprite:new{ x = self.x + exhaust_offset[0].x, y = self.y + exhaust_offset[0].y }
+  self.rocket_sfx = vehicle_plainloop:new()
   return self
 end
 
@@ -38,7 +40,8 @@ function pship:accelerate(dt)
   local speed = 200
   self.dx = self.dx + math.cos(self.angle) * speed * dt
   self.dy = self.dy + math.sin(self.angle) * speed * dt
-  self.accelerating = true
+  self.accelerating = true  -- TODO: unneeded?
+  self.rocket_sfx:on()
 end
 
 function pship:move(dt)
@@ -50,6 +53,7 @@ function pship:move(dt)
   self.exhaust.y = self.y
   self.exhaust.texture = self.exhaust.textures[math.floor(love.timer.getTime() * 15) % 2]
   if self.invincibility_timer > 0 then self.invincibility_timer = self.invincibility_timer - dt * 1000 end
+  if not love.joystick.isDown(1, 5) then self.rocket_sfx:off() end
 end
 
 function pship:paint(x, y)
