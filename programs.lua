@@ -10,10 +10,11 @@ local sun = require('src.sun')
 local explosion_hard = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static')
 
 -- functions to handle game logic
-local programs = {}
+local programs = {
+  debris_t = {},
+}
 
 local bullets_t = {}
-local debris_t = {}
 local explodes_t = {}
 local pships_t = {}
 local tractors_t = {}
@@ -24,8 +25,8 @@ function programs.advance_physics(dt)
     this:move(dt)
     if this.remove_me_from_all_lists then table.remove(bullets_t, i) end
   end
-  for i = #debris_t, 1, -1 do
-    object_a = debris_t[i]
+  for i = #programs.debris_t, 1, -1 do
+    object_a = programs.debris_t[i]
     object_a:move(dt)
     for j = #bullets_t, 1, -1 do
       object_b = bullets_t[j]
@@ -35,7 +36,7 @@ function programs.advance_physics(dt)
       end
       if object_b.remove_me_from_all_lists then table.remove(bullets_t, j) end
     end
-    if object_a.remove_me_from_all_lists then table.remove(debris_t, i) end
+    if object_a.remove_me_from_all_lists then table.remove(programs.debris_t, i) end
   end
   for i = #explodes_t, 1, -1 do
     this = explodes_t[i]
@@ -45,14 +46,14 @@ function programs.advance_physics(dt)
   for i = #pships_t, 1, -1 do
     ship = pships_t[i]
     ship:move(dt)
-    for j = #debris_t, 1, -1 do
-      that = debris_t[j]
+    for j = #programs.debris_t, 1, -1 do
+      that = programs.debris_t[j]
       if ship.invincibility_timer <= 0 and ship:is_touching(that) then
         ship.hit_points = ship.hit_points - ((that.size + 1) * 8)
         ship.invincibility_timer = 1000
         programs.destroy_debris(that)
       end
-      if that.remove_me_from_all_lists then table.remove(debris_t, j) end
+      if that.remove_me_from_all_lists then table.remove(programs.debris_t, j) end
     end
     if ship.remove_me_from_all_lists then table.remove(pships_t, i) end
   end
@@ -74,7 +75,7 @@ end
 
 function programs.flush_objects()
   bullets_t = {}
-  debris_t = {}
+  programs.debris_t = {}
   explodes_t = {}
   pships_t = {}
   tractors_t = {}
@@ -86,7 +87,7 @@ function programs.spawn_bullet(o)
   o.space_height = graphics.space_height
   local object = bullet:new(o)
   table.insert(bullets_t, object)
-  table.insert(graphics.sprites_layer_0, object)
+  table.insert(graphics.sprites_layer_3, object)
   return object
 end
 
@@ -95,27 +96,27 @@ function programs.spawn_debris(o)
   o.space_width = graphics.space_width
   o.space_height = graphics.space_height
   local object = debris:new(o):init()
-  table.insert(debris_t, object)
-  table.insert(graphics.sprites_layer_1, object)
+  table.insert(programs.debris_t, object)
+  table.insert(graphics.sprites_layer_2, object)
   return object
 end
 
 function programs.spawn_exhaust(o)
   local object = exhaust:new(o)
-  table.insert(graphics.sprites_layer_0, object)
+  table.insert(graphics.sprites_layer_1, object)
   return object
 end
 
 function programs.spawn_explosion(o)
   local object = explode2:new(o)
   table.insert(explodes_t, object)
-  table.insert(graphics.sprites_layer_2, object)
+  table.insert(graphics.sprites_layer_3, object)
 end
 
 function programs.spawn_pship(o)
   local object = pship:new(o):init()
   table.insert(pships_t, object)
-  table.insert(graphics.sprites_layer_0, object)
+  table.insert(graphics.sprites_layer_1, object)
   return object
 end
 

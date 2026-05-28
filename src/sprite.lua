@@ -7,7 +7,7 @@ local sprite = {
 }
 
 function sprite:paint(x, y)
-  love.graphics.draw(self.texture, self.quad, self.ox + self.x + x, self.oy + self.y + y)
+  love.graphics.draw(self.texture, self.quad, math.floor(self.ox + self.x + x), math.floor(self.oy + self.y + y))
   --love.graphics.rectangle('line', self.x + x - 6, self.y + y - 6, 13, 13)
 end
 

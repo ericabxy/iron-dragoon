@@ -13,6 +13,7 @@ local graphics = {
   sprites_layer_0 = {},
   sprites_layer_1 = {},
   sprites_layer_2 = {},
+  sprites_layer_3 = {},
   player0 = { hit_points = 64 },
   stage_name = {
     'GAME 01',
@@ -35,6 +36,7 @@ function graphics.flush_sprites()
   graphics.sprites_layer_0 = {}
   graphics.sprites_layer_1 = {}
   graphics.sprites_layer_2 = {}
+  graphics.sprites_layer_3 = {}
 end
 
 function love.draw()
@@ -49,6 +51,7 @@ function love.draw()
       graphics.draw_sprite_layer(graphics.sprites_layer_0, x + graphics.scroll_x, y + graphics.scroll_y)
       graphics.draw_sprite_layer(graphics.sprites_layer_1, x + graphics.scroll_x, y + graphics.scroll_y)
       graphics.draw_sprite_layer(graphics.sprites_layer_2, x + graphics.scroll_x, y + graphics.scroll_y)
+      graphics.draw_sprite_layer(graphics.sprites_layer_3, x + graphics.scroll_x, y + graphics.scroll_y)
     end
   end
   love.graphics.setColor(0, 0, 0)
