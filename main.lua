@@ -26,18 +26,12 @@ function love.update(dt)
   if love.joystick.isDown(1, RETRO_DEVICE_ID_JOYPAD_UP) then
     player0:accelerate(dt)
   end
-  if love.joystick.isDown(1, RETRO_DEVICE_ID_JOYPAD_B) and globalcooldown < 0 then
-    love.audio.play(bullet_laser)
-    table.insert(bullets_t, programs.spawn_bullet{
-      x = player0.x + math.cos(player0.angle) * 10,
-      y = player0.y + math.sin(player0.angle) * 10,
-      dx = player0.dx,
-      dy = player0.dy,
-      angle = player0.angle
-    }:init( ))
-    globalcooldown = 500
+  if love.joystick.isDown(1, RETRO_DEVICE_ID_JOYPAD_B) then
+    local bullet = player0:fire_bullet()
+    if bullet then
+      table.insert(bullets_t, programs.spawn_bullet(bullet):init( ))
+    end
   end
-  globalcooldown = globalcooldown - dt * 1000
   programs.advance_physics(dt)
   current_game.run(dt)
 end

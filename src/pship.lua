@@ -1,5 +1,6 @@
 local exhaust2sprite = require('src.exhaust2sprite')
 local pship2sprite = require('src.pship2sprite')
+local sfx_wpn_laser1 = require('src.sfx_wpn_laser1')
 local vehicle_plainloop = require('src.vehicle_plainloop')
 
 local exhaust_offset = {
@@ -10,7 +11,10 @@ local exhaust_offset = {
 }
 
 local pship = pship2sprite:new{
+  controller_number = 1,
   sfx_rocket = vehicle_plainloop:new(),
+  sfx_bullet = sfx_wpn_laser1:new(),
+  bullet_cooldown_timer = 0,
   invincibility_timer = 0,
   space_width = 256,
   space_height = 256,
@@ -44,6 +48,20 @@ function pship:accelerate(dt)
   self.sfx_rocket:on()
 end
 
+function pship:fire_bullet()
+  if self.bullet_cooldown_timer <= 0 then
+    self.bullet_cooldown_timer = 500
+    self.sfx_rocket:on()
+    return {
+      x = self.x + math.cos(self.angle) * 10,
+      y = self.y + math.sin(self.angle) * 10,
+      dx = self.dx,
+      dy = self.dy,
+      angle = self.angle
+    }
+  end
+end
+
 function pship:move(dt)
   self.x = (self.x + self.dx * dt) % self.space_width
   self.y = (self.y + self.dy * dt) % self.space_height
@@ -54,6 +72,7 @@ function pship:move(dt)
   self.exhaust.texture = self.exhaust.textures[math.floor(love.timer.getTime() * 15) % 2]
   if self.invincibility_timer > 0 then self.invincibility_timer = self.invincibility_timer - dt * 1000 end
   if not love.joystick.isDown(1, 5) then self.sfx_rocket:off() end
+  if self.bullet_cooldown_timer > 0 then self.bullet_cooldown_timer = self.bullet_cooldown_timer - dt * 1000 end
 end
 
 function pship:paint(x, y)
