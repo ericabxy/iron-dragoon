@@ -68,15 +68,15 @@ function love.draw()
   love.graphics.rectangle('fill', 256, 0, 64, 240)
   love.graphics.setColor(255, 0, 0)
   love.graphics.rectangle('fill', 256, 0, graphics.player0.hit_points, 6)
-  love.graphics.setColor(0, 85, 0)
+  love.graphics.setColor(CGA_COLOR_NAME_GREEN)
   love.graphics.rectangle('fill', 256, 176, 64, 64)
-  love.graphics.setColor(85, 170, 85)
+  love.graphics.setColor(CGA_COLOR_NAME_LIGHT_GREEN)
   for i = #graphics.radar.blips_green_t, 1, -1 do
     local o = graphics.radar.blips_green_t[i]
     love.graphics.rectangle('fill', 256 + (o.x / (graphics.space_width / 64)), 176 + (o.y / (graphics.space_height / 64)), 2, 2)
     if o.remove_me_from_all_lists then table.remove(graphics.radar.blips_green_t, i) end
   end
-  love.graphics.setColor(170, 170, 85)
+  love.graphics.setColor(CGA_COLOR_NAME_YELLOW)
   for i = #graphics.radar.blips_yellow_t, 1, -1 do
     local o = graphics.radar.blips_yellow_t[i]
     love.graphics.rectangle('fill', 256 + (o.x / (graphics.space_width / 64)), 176 + (o.y / (graphics.space_height / 64)), 2, 2)
