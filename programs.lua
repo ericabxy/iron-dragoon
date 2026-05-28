@@ -117,6 +117,7 @@ function programs.spawn_pship(o)
   local object = pship:new(o):init()
   table.insert(pships_t, object)
   table.insert(graphics.sprites_layer_1, object)
+  table.insert(graphics.radar.blips_green_t, object)
   return object
 end
 
@@ -125,6 +126,7 @@ function programs.spawn_sun(o)
   object.quad = object.quads[1]
   table.insert(tractors_t, object)
   table.insert(graphics.sprites_layer_0, object)
+  table.insert(graphics.radar.blips_yellow_t, object)
 end
 
 function programs.start_game()

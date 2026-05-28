@@ -1,5 +1,6 @@
 local background = love.graphics.newImage('share/space.png')
 local bitmapfont = require('src.bitmap_font_futuristic')
+local standard_color_names = require('src.standard_color_names')
 
 local graphics = {
   object_to_follow_with_camera = false,
@@ -22,6 +23,12 @@ local graphics = {
   },
 }
 
+graphics.radar = {
+  blips_red_t = {},
+  blips_green_t = {},
+  blips_yellow_t = {},
+}
+
 love.graphics.setCanvas(graphics.background_layer)
 love.graphics.draw(background, 0, 0)
 
@@ -37,6 +44,9 @@ function graphics.flush_sprites()
   graphics.sprites_layer_1 = {}
   graphics.sprites_layer_2 = {}
   graphics.sprites_layer_3 = {}
+  graphics.radar.blips_red_t = {}
+  graphics.radar.blips_green_t = {}
+  graphics.radar.blips_yellow_t = {}
 end
 
 function love.draw()
@@ -58,12 +68,22 @@ function love.draw()
   love.graphics.rectangle('fill', 256, 0, 64, 240)
   love.graphics.setColor(255, 0, 0)
   love.graphics.rectangle('fill', 256, 0, graphics.player0.hit_points, 6)
+  love.graphics.setColor(0, 85, 0)
+  love.graphics.rectangle('fill', 256, 176, 64, 64)
+  love.graphics.setColor(85, 170, 85)
+  for i = #graphics.radar.blips_green_t, 1, -1 do
+    local o = graphics.radar.blips_green_t[i]
+    love.graphics.rectangle('fill', 256 + (o.x / (graphics.space_width / 64)), 176 + (o.y / (graphics.space_height / 64)), 2, 2)
+    if o.remove_me_from_all_lists then table.remove(graphics.radar.blips_green_t, i) end
+  end
+  love.graphics.setColor(170, 170, 85)
+  for i = #graphics.radar.blips_yellow_t, 1, -1 do
+    local o = graphics.radar.blips_yellow_t[i]
+    love.graphics.rectangle('fill', 256 + (o.x / (graphics.space_width / 64)), 176 + (o.y / (graphics.space_height / 64)), 2, 2)
+    if o.remove_me_from_all_lists then table.remove(graphics.radar.blips_yellow_t, i) end
+  end
   love.graphics.setColor(255, 255, 255)
   love.graphics.rectangle('line', 256, 0, 63, 5)
-  love.graphics.setFont(bitmapfont)
-  for n, text in ipairs(graphics.stage_name) do
-    love.graphics.print(text, 256, 208 + (n * 8))
-  end
 end
 
 return graphics
