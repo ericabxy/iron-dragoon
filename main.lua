@@ -1,3 +1,4 @@
+local constants = require('src.constants')
 local graphics = require('graphics')
 local programs = require('programs')
 local game01 = require('game01')
@@ -5,16 +6,15 @@ local game02 = require('game02')
 
 local bullet_laser = love.audio.newSource('share/sfx_wpn_laser1.wav', 'static')
 
-require('const')
-
 local globalcooldown = 0
 local players_t = {}
 local bullets_t = {}
 local debris_t = {}
-local player0 = false 
+local player0 = false
+local current_game = game01
 
 function love.load()
-  player0 = game01.start()
+  player0 = current_game.start()
 end
 
 function love.update(dt)
@@ -39,6 +39,7 @@ function love.update(dt)
   end
   globalcooldown = globalcooldown - dt * 1000
   programs.advance_physics(dt)
+  current_game.run(dt)
 end
 
 function love.keypressed(key)
@@ -47,8 +48,10 @@ function love.keypressed(key)
   elseif key == 'return' then
     love.load()
   elseif key == '1' then
-    player0 = game01.start()
+    current_game = game01
+    player0 = current_game.start()
   elseif key == '2' then
-    player0 = game02.start()
+    current_game = game02
+    player0 = current_game.start()
   end
 end

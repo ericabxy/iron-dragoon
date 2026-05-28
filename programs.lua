@@ -5,6 +5,7 @@ local exhaust = require('src.exhaust')
 local explode1 = require('src.explode1')
 local explode2 = require('src.explode2')
 local pship = require('src.pship')
+local sun = require('src.sun')
 
 local explosion_hard = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static')
 
@@ -15,6 +16,7 @@ local bullets_t = {}
 local debris_t = {}
 local explodes_t = {}
 local pships_t = {}
+local tractors_t = {}
 
 function programs.advance_physics(dt)
   for i = #bullets_t, 1, -1 do
@@ -54,10 +56,6 @@ function programs.advance_physics(dt)
     end
     if ship.remove_me_from_all_lists then table.remove(pships_t, i) end
   end
-  -- periodically spawn new debris
-  if #debris_t < 3 and love.math.random(100) == 1 then
-    programs.spawn_debris{ x = love.math.random(256), y = love.math.random(245, 250), size = 2 }
-  end
 end
 
 function programs.destroy_debris(o)
@@ -78,6 +76,8 @@ function programs.flush_objects()
   bullets_t = {}
   debris_t = {}
   explodes_t = {}
+  pships_t = {}
+  tractors_t = {}
 end
 
 function programs.spawn_bullet(o)
@@ -117,6 +117,13 @@ function programs.spawn_pship(o)
   table.insert(pships_t, object)
   table.insert(graphics.sprites_layer_0, object)
   return object
+end
+
+function programs.spawn_sun(o)
+  local object = sun:new(o)
+  object.quad = object.quads[1]
+  table.insert(tractors_t, object)
+  table.insert(graphics.sprites_layer_0, object)
 end
 
 function programs.start_game()

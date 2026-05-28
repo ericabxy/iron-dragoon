@@ -14,4 +14,11 @@ function game01.start()
   return player0
 end
 
+function game01.run(dt)
+  -- periodically spawn new debris
+  if #programs.debris_t < 3 and love.math.random(100) == 1 then
+    programs.spawn_debris{ x = love.math.random(256), y = love.math.random(245, 250), size = 2 }
+  end
+end
+
 return game01
