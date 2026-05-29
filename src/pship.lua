@@ -11,6 +11,7 @@ local exhaust_offset = {
 }
 
 local pship = pship2sprite:new{
+  iron_dragoon_type_id = 'playership',
   controller_number = 1,
   sfx_rocket = vehicle_plainloop:new(),
   sfx_bullet = sfx_wpn_laser1:new(),
@@ -28,7 +29,9 @@ local pship = pship2sprite:new{
 }
 
 function pship:init()
-  self.exhaust = exhaust2sprite:new{ x = self.x + exhaust_offset[0].x, y = self.y + exhaust_offset[0].y }
+  self.exhaust = exhaust2sprite:new{
+    x = self.x, y = self.y, ox = exhaust_offset[0].x, oy = exhaust_offset[0].y
+  }
   return self
 end
 
@@ -51,7 +54,7 @@ end
 function pship:fire_bullet()
   if self.bullet_cooldown_timer <= 0 then
     self.bullet_cooldown_timer = 350
-    self.sfx_bullet:on()
+    self:play_sfx_bullet_fire()
     return {
       x = self.x + math.cos(self.angle) * 10,
       y = self.y + math.sin(self.angle) * 10,

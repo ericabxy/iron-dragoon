@@ -22,10 +22,10 @@ local tractors_t = {}
 function programs.add_new_objects_to_lists(t)
   if type(t) == 'table' then
     for _, object in ipairs(t) do
-      if object.iron_dragoon_type == 'explosion' then
+      if object.iron_dragoon_type_id == 'explosion' then
         table.insert(explodes_t, object)
         table.insert(graphics.sprites_layer_3, object)          
-      elseif object.iron_dragoon_type == 'debris' then
+      elseif object.iron_dragoon_type_id == 'debris' then
         table.insert(programs.debris_t, object)
         table.insert(graphics.sprites_layer_2, object)
       end
@@ -111,12 +111,6 @@ function programs.spawn_debris(o)
   local object = debris:new(o):init()
   table.insert(programs.debris_t, object)
   table.insert(graphics.sprites_layer_2, object)
-  return object
-end
-
-function programs.spawn_exhaust(o)
-  local object = exhaust:new(o)
-  table.insert(graphics.sprites_layer_1, object)
   return object
 end
 

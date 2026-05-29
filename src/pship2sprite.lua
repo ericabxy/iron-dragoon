@@ -3,6 +3,10 @@ local sprite = require('src.sprite')
 
 local pship2sprite = sprite:new{
   exhaust = exhaust2sprite:new(),
+  -- Load a limited number of channels to play multiple bullet sounds at once.
+  sfx_bullet_fire = love.audio.newSource('share/sfx_wpn_laser1.wav', 'static'),
+  sfx_bullet_fire2 = love.audio.newSource('share/sfx_wpn_laser1.wav', 'static'),
+  sfx_bullet_fire3 = love.audio.newSource('share/sfx_wpn_laser1.wav', 'static'),
   texture = love.graphics.newImage('share/pship2_transparent.png'),
   quad = love.graphics.newQuad(96, 48, 25, 25, 128, 128),
   quads = {},
@@ -28,6 +32,12 @@ pship2sprite.quads[12] = love.graphics.newQuad(48, 0, 25, 25, 128, 128)
 pship2sprite.quads[13] = love.graphics.newQuad(72, 0, 25, 25, 128, 128)
 pship2sprite.quads[14] = love.graphics.newQuad(96, 0, 25, 25, 128, 128)
 pship2sprite.quads[15] = love.graphics.newQuad(96, 24, 25, 25, 128, 128)
+
+function pship2sprite:play_sfx_bullet_fire()
+  if not self.sfx_bullet_fire:isPlaying() then love.audio.play(self.sfx_bullet_fire)
+  elseif not self.sfx_bullet_fire2:isPlaying() then love.audio.play(self.sfx_bullet_fire2)
+  elseif not self.sfx_bullet_fire3:isPlaying() then love.audio.play(self.sfx_bullet_fire3) end
+end
 
 function pship2sprite:new(o)
   o = o or {}

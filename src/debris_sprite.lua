@@ -1,9 +1,13 @@
 local sprite = require('src.sprite')
 
 local debris_sprite = sprite:new{
+  -- Load a limited number of channels to play multiple explosion sounds at once.
+  sfx_explode = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static'),
+  sfx_explode2 = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static'),
+  sfx_explode3 = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static'),
   texture = love.graphics.newImage('share/iron_plague_debris2.png'),
-  textures = {},
   quad = love.graphics.newQuad(0, 0, 25, 25, 145, 25),
+  textures = {},
   quads = {},
   ox = -12,
   oy = -12,
@@ -21,9 +25,15 @@ debris_sprite.quads[3] = love.graphics.newQuad(72, 0, 25, 25, 145, 25)
 debris_sprite.quads[4] = love.graphics.newQuad(96, 0, 25, 25, 145, 25)
 debris_sprite.quads[5] = love.graphics.newQuad(120, 0, 25, 25, 145, 25)
 
-function sprite:animate()
+function debris_sprite:animate()
   local fps = 15
   self.quad = self.quads[math.floor(love.timer.getTime() * fps) % 6]
+end
+
+function debris_sprite:play_sfx_explode()
+  if not self.sfx_explode:isPlaying() then love.audio.play(self.sfx_explode)
+  elseif not self.sfx_explode2:isPlaying() then love.audio.play(self.sfx_explode2)
+  elseif not self.sfx_explode3:isPlaying() then love.audio.play(self.sfx_explode3) end
 end
 
 function debris_sprite:new(o)
