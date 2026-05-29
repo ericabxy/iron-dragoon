@@ -1,3 +1,5 @@
+--- Functions for loading and running Game 1 of Iron Dragoon.
+-- Working title: "Meteor Shower".
 local graphics = require('graphics')
 local programs = require('programs')
 

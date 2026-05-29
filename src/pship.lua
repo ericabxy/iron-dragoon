@@ -50,7 +50,7 @@ end
 
 function pship:fire_bullet()
   if self.bullet_cooldown_timer <= 0 then
-    self.bullet_cooldown_timer = 500
+    self.bullet_cooldown_timer = 350
     self.sfx_bullet:on()
     return {
       x = self.x + math.cos(self.angle) * 10,

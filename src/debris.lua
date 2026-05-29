@@ -1,5 +1,7 @@
 --- @module src.debris_sprite
 local debris_sprite = require('src.debris_sprite')
+local explode2 = require('src.explode2')
+local explosion_sfx = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static')
 
 local LARGE = 2
 local MEDIUM = 1
@@ -7,12 +9,40 @@ local SMALL = 0
 
 -- class table
 local debris = debris_sprite:new{
+  iron_dragoon_type = 'debris',
   space_width = 256,
   space_height = 256,
   size = LARGE,
   dx = 0,
   dy = 0,
 }
+
+function debris:collide_with_bullet(o)
+  if self.remove_me_from_all_lists then return end
+  local hitsize = 5
+  if self.x - hitsize < o.x and self.x + hitsize > o.x and self.y - hitsize < o.y and self.y + hitsize > o.y then
+    love.audio.play(explosion_sfx)
+    self.remove_me_from_all_lists = true
+    o.remove_me_from_all_lists = true
+    if self.size == LARGE then
+      return {
+        explode2:new{ x = self.x, y = self.y },
+        debris:new{ x = self.x, y = self.y, size = MEDIUM }:init(),
+        debris:new{ x = self.x, y = self.y, size = MEDIUM }:init()
+      }
+    elseif self.size == MEDIUM then
+      return {
+        explode2:new{ x = self.x, y = self.y },
+        debris:new{ x = self.x, y = self.y, size = SMALL }:init(),
+        debris:new{ x = self.x, y = self.y, size = SMALL }:init()
+      }
+    elseif self.size == SMALL then
+      return {
+        explode2:new{ x = self.x, y = self.y }
+      }
+    end
+  end
+end
 
 function debris:init()
   local speed = 20

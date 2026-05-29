@@ -26,17 +26,28 @@ function programs.advance_physics(dt)
     if this.remove_me_from_all_lists then table.remove(bullets_t, i) end
   end
   for i = #programs.debris_t, 1, -1 do
-    object_a = programs.debris_t[i]
-    object_a:move(dt)
+    this_debris = programs.debris_t[i]
+    this_debris:move(dt)
     for j = #bullets_t, 1, -1 do
-      object_b = bullets_t[j]
-      if object_a:is_touching(object_b) then
-        programs.destroy_debris(object_a)
-        object_b.remove_me_from_all_lists = true
+      this_bullet = bullets_t[j]
+      -- TODO: Generalize this using "iron_dragoon_type" detection
+      local any_spawns = this_debris:collide_with_bullet(this_bullet)
+      if any_spawns and any_spawns[1] then
+        table.insert(explodes_t, any_spawns[1])
+        table.insert(graphics.sprites_layer_3, any_spawns[1])
       end
-      if object_b.remove_me_from_all_lists then table.remove(bullets_t, j) end
+      if any_spawns and any_spawns[2] then
+        print(any_spawns, any_spawns[2].size)
+        table.insert(programs.debris_t, any_spawns[2])
+        table.insert(graphics.sprites_layer_2, any_spawns[2])
+      end
+      if any_spawns and any_spawns[3] then
+        table.insert(programs.debris_t, any_spawns[3])
+        table.insert(graphics.sprites_layer_2, any_spawns[3])
+      end
+      if this_bullet.remove_me_from_all_lists then table.remove(bullets_t, j) end
     end
-    if object_a.remove_me_from_all_lists then table.remove(programs.debris_t, i) end
+    if this_debris.remove_me_from_all_lists then table.remove(programs.debris_t, i) end
   end
   for i = #explodes_t, 1, -1 do
     this = explodes_t[i]

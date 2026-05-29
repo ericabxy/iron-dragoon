@@ -1,3 +1,5 @@
+--- Functions for loading and running Game 2 of Iron Dragoon.
+-- Working title: "Solar Liberator" or "Sector Protector".
 local background_texture = love.graphics.newImage('share/space.png')
 local graphics = require('graphics')
 local programs = require('programs')
