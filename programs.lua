@@ -19,6 +19,20 @@ local explodes_t = {}
 local pships_t = {}
 local tractors_t = {}
 
+function programs.add_new_objects_to_lists(t)
+  if type(t) == 'table' then
+    for _, object in ipairs(t) do
+      if object.iron_dragoon_type == 'explosion' then
+        table.insert(explodes_t, object)
+        table.insert(graphics.sprites_layer_3, object)          
+      elseif object.iron_dragoon_type == 'debris' then
+        table.insert(programs.debris_t, object)
+        table.insert(graphics.sprites_layer_2, object)
+      end
+    end
+  end
+end
+
 function programs.advance_physics(dt)
   for i = #bullets_t, 1, -1 do
     this = bullets_t[i]
@@ -31,20 +45,8 @@ function programs.advance_physics(dt)
     for j = #bullets_t, 1, -1 do
       this_bullet = bullets_t[j]
       -- TODO: Generalize this using "iron_dragoon_type" detection
-      local any_spawns = this_debris:collide_with_bullet(this_bullet)
-      if any_spawns and any_spawns[1] then
-        table.insert(explodes_t, any_spawns[1])
-        table.insert(graphics.sprites_layer_3, any_spawns[1])
-      end
-      if any_spawns and any_spawns[2] then
-        print(any_spawns, any_spawns[2].size)
-        table.insert(programs.debris_t, any_spawns[2])
-        table.insert(graphics.sprites_layer_2, any_spawns[2])
-      end
-      if any_spawns and any_spawns[3] then
-        table.insert(programs.debris_t, any_spawns[3])
-        table.insert(graphics.sprites_layer_2, any_spawns[3])
-      end
+      local new_objects = this_debris:collide_with_bullet(this_bullet)
+      programs.add_new_objects_to_lists(new_objects)
       if this_bullet.remove_me_from_all_lists then table.remove(bullets_t, j) end
     end
     if this_debris.remove_me_from_all_lists then table.remove(programs.debris_t, i) end

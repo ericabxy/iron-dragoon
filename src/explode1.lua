@@ -2,7 +2,9 @@
 local explode1sprite = require('src.explode1sprite')
 
 -- class table
-local explode1 = explode1sprite:new{}
+local explode1 = explode1sprite:new{
+  iron_dragoon_type = 'explosion',
+}
 
 -- Move according to momentum and update graphics
 function explode1:move(dt)
