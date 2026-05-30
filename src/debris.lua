@@ -16,35 +16,27 @@ local debris = debris_sprite:new{
   dy = 0,
 }
 
-function debris:collide_with_bullet(o)
-  if self.remove_me_from_all_lists then return end
-  local hitsize = 5
-  if self.x - hitsize < o.x and self.x + hitsize > o.x and self.y - hitsize < o.y and self.y + hitsize > o.y then
-    self:play_sfx_explode()
-    self.remove_me_from_all_lists = true
-    o.remove_me_from_all_lists = true
-    if self.size == LARGE then
-      return {
-        explode2:new{ x = self.x, y = self.y },
-        debris:new{ x = self.x, y = self.y, size = MEDIUM }:init(),
-        debris:new{ x = self.x, y = self.y, size = MEDIUM }:init()
-      }
-    elseif self.size == MEDIUM then
-      return {
-        explode2:new{ x = self.x, y = self.y },
-        debris:new{ x = self.x, y = self.y, size = SMALL }:init(),
-        debris:new{ x = self.x, y = self.y, size = SMALL }:init()
-      }
-    elseif self.size == SMALL then
-      return {
-        explode2:new{ x = self.x, y = self.y }
-      }
-    end
+function debris:collide_with_bullet(this_bullet)
+  local angle1 = love.math.random() * (2 * math.pi)
+  local angle2 = (angle1 - math.pi) % (2 * math.pi)
+  local spawns = {}
+  self:play_sfx_explode()
+  self.remove_me_from_all_lists = true
+  this_bullet.remove_me_from_all_lists = true
+  table.insert(spawns, explode2:new{ x = self.x, y = self.y })
+  -- Breakup into smaller debris.
+  if self.size == LARGE then
+    table.insert(spawns, debris:new{ size = MEDIUM, x = self.x, y = self.y, angle = angle1 })
+    table.insert(spawns, debris:new{ size = MEDIUM, x = self.x, y = self.y, angle = angle2 })
+  elseif self.size == MEDIUM then
+    table.insert(spawns, debris:new{ size = SMALL, x = self.x, y = self.y, angle = angle1 })
+    table.insert(spawns, debris:new{ size = SMALL, x = self.x, y = self.y, angle = angle2 })
   end
+  return spawns
 end
 
 function debris:init()
-  local speed = 20
+  local speed = self.size == LARGE and 20 or self.size == MEDIUM and 30 or self.size == SMALL and 40
   local angle = love.math.random() * ( 2 * math.pi )
   self.texture = self.textures[self.size]
   self.dx = math.cos(angle) * speed 
@@ -52,7 +44,7 @@ function debris:init()
   return self
 end
 
-function debris:is_touching(o)
+function debris:is_touching_bullet(o)
   local hitsize = 5
   if self.x - hitsize < o.x and self.x + hitsize > o.x and self.y - hitsize < o.y and self.y + hitsize > o.y then
     return true
@@ -70,7 +62,7 @@ function debris:new(o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  return o
+  return o:init()
 end
 
 return debris

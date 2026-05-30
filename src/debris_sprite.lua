@@ -1,10 +1,13 @@
 local sprite = require('src.sprite')
 
+--local explode_sfx_filename = 'share/sfx_exp_shortest_hard1.wav'
+local explode_sfx_filename = 'share/sfx_exp_short_soft1.wav'
+
 local debris_sprite = sprite:new{
   -- Load a limited number of channels to play multiple explosion sounds at once.
-  sfx_explode = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static'),
-  sfx_explode2 = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static'),
-  sfx_explode3 = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static'),
+  sfx_explode = love.audio.newSource(explode_sfx_filename, 'static'),
+  sfx_explode2 = love.audio.newSource(explode_sfx_filename, 'static'),
+  sfx_explode3 = love.audio.newSource(explode_sfx_filename, 'static'),
   texture = love.graphics.newImage('share/iron_plague_debris2.png'),
   quad = love.graphics.newQuad(0, 0, 25, 25, 145, 25),
   textures = {},

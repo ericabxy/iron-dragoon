@@ -5,7 +5,7 @@ local bullet = bulletsprite:new{
   space_height = 256,
   time_to_live = 750,
   angle = 0,
-  speed = 250,
+  speed = 200,
 }
 
 function bullet:init()

@@ -3,6 +3,7 @@ local sprite = require('src.sprite')
 local bulletsprite = sprite:new{
   texture = love.graphics.newImage('share/iron_plague_bullet_flame.png'),
   quad = love.graphics.newQuad(24, 12, 13, 13, 64, 64),
+  textures = {},
   quads = {},
   ox = -7,
   oy = -7,
@@ -10,6 +11,10 @@ local bulletsprite = sprite:new{
   y = 0,
 }
 
+bulletsprite.textures[0] = bulletsprite.texture
+bulletsprite.textures[1] = love.graphics.newImage('share/iron_plague_bullet_frost.png')
+bulletsprite.textures[2] = love.graphics.newImage('share/iron_plague_bullet_fluid.png')
+bulletsprite.textures[3] = love.graphics.newImage('share/iron_plague_bullet_frost2.png')
 bulletsprite.quads[0] = bulletsprite.quad
 bulletsprite.quads[1] = love.graphics.newQuad(24, 24, 13, 13, 64, 64)
 bulletsprite.quads[2] = love.graphics.newQuad(12, 24, 13, 13, 64, 64)

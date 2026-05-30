@@ -1,7 +1,5 @@
 local exhaust2sprite = require('src.exhaust2sprite')
-local pship2sprite = require('src.pship2sprite')
-local sfx_wpn_laser1 = require('src.sfx_wpn_laser1')
-local vehicle_plainloop = require('src.vehicle_plainloop')
+local pship2fx = require('src.pship2fx')
 
 local exhaust_offset = {
   [0] = { x = -19, y = -9 }, { x = -19, y = -13 }, { x = -17, y = -17 }, { x = -13, y = -19 },
@@ -10,11 +8,9 @@ local exhaust_offset = {
         { x = -9, y = 1 }, { x = -13, y = 1 }, { x = -17, y = -2 }, { x = -19, y = -6 }
 }
 
-local pship = pship2sprite:new{
+local pship = pship2fx:new{
   iron_dragoon_type_id = 'playership',
   controller_number = 1,
-  sfx_rocket = vehicle_plainloop:new(),
-  sfx_bullet = sfx_wpn_laser1:new(),
   bullet_cooldown_timer = 0,
   invincibility_timer = 0,
   space_width = 256,
@@ -23,6 +19,7 @@ local pship = pship2sprite:new{
   firing_angle = 0,
   heading_n = 0,
   rotation = 0,
+  radius = 12,
   angle = 0,
   dx = 0,
   dy = 0,
@@ -48,7 +45,7 @@ function pship:accelerate(dt)
   self.dx = self.dx + math.cos(self.angle) * speed * dt
   self.dy = self.dy + math.sin(self.angle) * speed * dt
   self.accelerating = true  -- TODO: unneeded?
-  self.sfx_rocket:on()
+  self:sfx_rocket_loop_on()
 end
 
 function pship:fire_bullet()
@@ -56,8 +53,8 @@ function pship:fire_bullet()
     self.bullet_cooldown_timer = 350
     self:play_sfx_bullet_fire()
     return {
-      x = self.x + math.cos(self.angle) * 10,
-      y = self.y + math.sin(self.angle) * 10,
+      x = self.x + math.cos(self.angle) * self.radius,
+      y = self.y + math.sin(self.angle) * self.radius,
       dx = self.dx,
       dy = self.dy,
       angle = self.angle
@@ -74,12 +71,12 @@ function pship:move(dt)
   self.exhaust.y = self.y
   self.exhaust.texture = self.exhaust.textures[math.floor(love.timer.getTime() * 15) % 2]
   if self.invincibility_timer > 0 then self.invincibility_timer = self.invincibility_timer - dt * 1000 end
-  if not love.joystick.isDown(1, 5) then self.sfx_rocket:off() end
+  if not love.joystick.isDown(1, 5) then self:sfx_rocket_loop_off() end
   if self.bullet_cooldown_timer > 0 then self.bullet_cooldown_timer = self.bullet_cooldown_timer - dt * 1000 end
 end
 
 function pship:paint(x, y)
-  pship2sprite.paint(self, x, y)
+  pship2fx.paint(self, x, y)
   if love.joystick.isDown(1, 5) then self.exhaust:paint(x, y) end
 end
 

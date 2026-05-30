@@ -5,6 +5,7 @@ local exhaust = require('src.exhaust')
 local explode1 = require('src.explode1')
 local explode2 = require('src.explode2')
 local pship = require('src.pship')
+local ship5 = require('src.ship5')
 local sun = require('src.sun')
 
 local explosion_hard = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static')
@@ -15,6 +16,7 @@ local programs = {
 }
 
 local bullets_t = {}
+local enemies_t = {}
 local explodes_t = {}
 local pships_t = {}
 local tractors_t = {}
@@ -44,12 +46,18 @@ function programs.advance_physics(dt)
     this_debris:move(dt)
     for j = #bullets_t, 1, -1 do
       this_bullet = bullets_t[j]
-      -- TODO: Generalize this using "iron_dragoon_type" detection
-      local new_objects = this_debris:collide_with_bullet(this_bullet)
-      programs.add_new_objects_to_lists(new_objects)
+      if this_debris:is_touching_bullet(this_bullet) then
+        local new_objects = this_debris:collide_with_bullet(this_bullet)
+        programs.add_new_objects_to_lists(new_objects)
+      end
       if this_bullet.remove_me_from_all_lists then table.remove(bullets_t, j) end
     end
     if this_debris.remove_me_from_all_lists then table.remove(programs.debris_t, i) end
+  end
+  for i = #enemies_t, 1, -1 do
+    this_enemy = enemies_t[i]
+    this_enemy:move(dt)
+    if this_enemy.remove_me_from_all_lists then table.remove(enemies_t, i) end
   end
   for i = #explodes_t, 1, -1 do
     this = explodes_t[i]
@@ -95,10 +103,12 @@ function programs.flush_objects()
 end
 
 function programs.spawn_bullet(o)
-  o = o or {}
+  o = o or { color = {255, 0, 0} }
   o.space_width = graphics.space_width
   o.space_height = graphics.space_height
   local object = bullet:new(o)
+  object.texture = object.textures[3]
+  object.color = {255, 0, 0}
   table.insert(bullets_t, object)
   table.insert(graphics.sprites_layer_3, object)
   return object
@@ -108,7 +118,7 @@ function programs.spawn_debris(o)
   o = o or {}
   o.space_width = graphics.space_width
   o.space_height = graphics.space_height
-  local object = debris:new(o):init()
+  local object = debris:new(o)
   table.insert(programs.debris_t, object)
   table.insert(graphics.sprites_layer_2, object)
   return object
@@ -126,6 +136,12 @@ function programs.spawn_pship(o)
   table.insert(graphics.sprites_layer_1, object)
   table.insert(graphics.radar.blips_green_t, object)
   return object
+end
+
+function programs.spawn_ship_5(o)
+  o = ship5:new(o)
+  table.insert(enemies_t, o)
+  table.insert(graphics.sprites_layer_3, o)
 end
 
 function programs.spawn_sun(o)
