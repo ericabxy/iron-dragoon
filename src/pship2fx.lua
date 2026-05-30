@@ -11,8 +11,9 @@ local pship2fx = sprite:new{
   sfx_bullet_fire2 = love.audio.newSource(bullet_sfx_filename, 'static'),
   sfx_bullet_fire3 = love.audio.newSource(bullet_sfx_filename, 'static'),
   sfx_rocket_loop = love.audio.newSource('share/sfx_vehicle_plainloop.wav', 'static'),
-  texture = love.graphics.newImage('share/pship2_transparent.png'),
+  texture = love.graphics.newImage('share/iron_plague_ship.png'),
   quad = love.graphics.newQuad(96, 48, 25, 25, 128, 128),
+  textures = {},
   quads = {},
   ox = -13,
   oy = -13,
@@ -21,6 +22,9 @@ local pship2fx = sprite:new{
 }
 
 pship2fx.sfx_rocket_loop:setLooping(true)
+pship2fx.textures[0] = pship2fx.texture
+pship2fx.textures[1] = love.graphics.newImage('share/iron_plague_ship2.png')
+pship2fx.textures[2] = love.graphics.newImage('share/iron_plague_pship2.png')
 pship2fx.quads[0] = pship2fx.quad
 pship2fx.quads[1] = love.graphics.newQuad(96, 72, 25, 25, 128, 128)
 pship2fx.quads[2] = love.graphics.newQuad(96, 96, 25, 25, 128, 128)

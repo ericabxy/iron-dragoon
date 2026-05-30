@@ -68,7 +68,7 @@ function love.draw()
   love.graphics.rectangle('fill', 256, 0, 64, 240)
   love.graphics.setColor(255, 0, 0)
   love.graphics.rectangle('fill', 256, 0, graphics.player0.hit_points, 6)
-  love.graphics.setColor(CGA_COLOR_NAME_GREEN)
+  love.graphics.setColor(8, 48, 14)  --CGA_COLOR_NAME_GREEN)
   love.graphics.rectangle('fill', 256, 176, 64, 64)
   love.graphics.setColor(CGA_COLOR_NAME_LIGHT_GREEN)
   for i = #graphics.radar.blips_green_t, 1, -1 do

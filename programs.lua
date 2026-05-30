@@ -131,7 +131,7 @@ function programs.spawn_explosion(o)
 end
 
 function programs.spawn_pship(o)
-  local object = pship:new(o):init()
+  local object = pship:new(o)
   table.insert(pships_t, object)
   table.insert(graphics.sprites_layer_1, object)
   table.insert(graphics.radar.blips_green_t, object)

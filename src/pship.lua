@@ -26,6 +26,7 @@ local pship = pship2fx:new{
 }
 
 function pship:init()
+  self.texture = self.textures[2]
   self.exhaust = exhaust2sprite:new{
     x = self.x, y = self.y, ox = exhaust_offset[0].x, oy = exhaust_offset[0].y
   }
@@ -95,7 +96,7 @@ function pship:new(o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  return o
+  return o:init()
 end
 
 return pship

@@ -1,6 +1,8 @@
 local bulletsprite = require('src.bulletsprite')
 
 local bullet = bulletsprite:new{
+  iron_dragoon_type_id = 'bullet',
+  iron_dragoon_bullet_type = 'flame',
   space_width = 256,
   space_height = 256,
   time_to_live = 750,
@@ -9,7 +11,6 @@ local bullet = bulletsprite:new{
 }
 
 function bullet:init()
-  --self:shift(36, 0)
   local n = math.floor(math.deg(self.angle) / 45)
   self.quad = self.quads[n]
   return self
