@@ -13,10 +13,10 @@ local explosion_hard = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 
 -- functions to handle game logic
 local programs = {
   debris_t = {},
+  enemies_t = {},
 }
 
 local bullets_t = {}
-local enemies_t = {}
 local explodes_t = {}
 local pships_t = {}
 local tractors_t = {}
@@ -24,12 +24,15 @@ local tractors_t = {}
 function programs.add_new_objects_to_lists(t)
   if type(t) == 'table' then
     for _, object in ipairs(t) do
-      if object.iron_dragoon_type_id == 'explosion' then
-        table.insert(explodes_t, object)
-        table.insert(graphics.sprites_layer_3, object)          
+      if object.iron_dragoon_type_id == 'bullet' then
+        table.insert(bullets_t, object)
+        table.insert(graphics.sprites_layer_3, object)
       elseif object.iron_dragoon_type_id == 'debris' then
         table.insert(programs.debris_t, object)
         table.insert(graphics.sprites_layer_2, object)
+      elseif object.iron_dragoon_type_id == 'explosion' then
+        table.insert(explodes_t, object)
+        table.insert(graphics.sprites_layer_3, object)          
       end
     end
   end
@@ -54,10 +57,14 @@ function programs.advance_physics(dt)
     end
     if this_debris.remove_me_from_all_lists then table.remove(programs.debris_t, i) end
   end
-  for i = #enemies_t, 1, -1 do
-    this_enemy = enemies_t[i]
-    this_enemy:move(dt)
-    if this_enemy.remove_me_from_all_lists then table.remove(enemies_t, i) end
+  for i = #programs.enemies_t, 1, -1 do
+    this_enemy = programs.enemies_t[i]
+    local any_spawns = this_enemy:move(dt)
+    if type(any_spawns) == 'table' then
+      print('spawn bullet')
+      programs.add_new_objects_to_lists(any_spawns)
+    end
+    if this_enemy.remove_me_from_all_lists then table.remove(programs.enemies_t, i) end
   end
   for i = #explodes_t, 1, -1 do
     this = explodes_t[i]
@@ -103,12 +110,11 @@ function programs.flush_objects()
 end
 
 function programs.spawn_bullet(o)
-  o = o or { color = {255, 0, 0} }
+  o = o or {}
   o.space_width = graphics.space_width
   o.space_height = graphics.space_height
   local object = bullet:new(o)
-  object.texture = object.textures[3]
-  object.color = {255, 0, 0}
+  object.texture = object.textures[0]
   table.insert(bullets_t, object)
   table.insert(graphics.sprites_layer_3, object)
   return object
@@ -140,7 +146,7 @@ end
 
 function programs.spawn_ship_5(o)
   o = ship5:new(o)
-  table.insert(enemies_t, o)
+  table.insert(programs.enemies_t, o)
   table.insert(graphics.sprites_layer_3, o)
 end
 

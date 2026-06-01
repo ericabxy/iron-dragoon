@@ -1,12 +1,10 @@
---- Functions for loading and running Game 2 of Iron Dragoon.
--- Working title: "Solar Liberator" or "Sector Protector".
+--- Functions for loading and running Base #01 for Solar Liberator game.
 local background_texture = love.graphics.newImage('share/space.png')
 local graphics = require('graphics')
 local programs = require('programs')
 local gamemode = require('src.gamemode')
-local guardian_turret = require('src.guardian_turret')
 
-local game02 = gamemode:new{}
+local base01 = gamemode:new{}
 
 local background_layer = love.graphics.newCanvas(1024 + 512, 768 + 512)
 love.graphics.setCanvas(background_layer)
@@ -17,7 +15,7 @@ for x = -256, 1024 + 256, 256 do
   end
 end
 
-function game02.start()
+function base01.start()
   graphics.flush_sprites()
   programs.flush_objects()
   graphics.origin_x = -256
@@ -29,14 +27,10 @@ function game02.start()
   player0 = programs.spawn_pship{ x = 128, y = 120, space_width = 1024, space_height = 768 }
   graphics.object_to_follow_with_camera = player0
   graphics.player0 = player0
-  --experimental injection of objects (instead of using spawner funcs)
-  local gt = guardian_turret:new{ x = 200, y = 200 }
-  table.insert(graphics.sprites_layer_2, gt)
-  table.insert(programs.enemies_t, gt)
   return player0
 end
 
-function game02.run()
+function base01.run()
 end
 
-return game02
+return base01

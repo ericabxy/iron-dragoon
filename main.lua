@@ -29,7 +29,7 @@ function love.update(dt)
   if love.joystick.isDown(1, RETRO_DEVICE_ID_JOYPAD_B) then
     local bullet = player0:fire_bullet()
     if bullet then
-      table.insert(bullets_t, programs.spawn_bullet(bullet):init( ))
+      table.insert(bullets_t, programs.spawn_bullet(bullet))
     end
   end
   programs.advance_physics(dt)

@@ -64,8 +64,10 @@ function love.draw()
       graphics.draw_sprite_layer(graphics.sprites_layer_3, x + graphics.scroll_x, y + graphics.scroll_y)
     end
   end
+  -- Draw HUD on right-hand side
   love.graphics.setColor(0, 0, 0)
   love.graphics.rectangle('fill', 256, 0, 64, 240)
+  -- Hit points
   love.graphics.setColor(255, 0, 0)
   love.graphics.rectangle('fill', 256, 0, graphics.player0.hit_points, 6)
   love.graphics.setColor(8, 48, 14)  --CGA_COLOR_NAME_GREEN)

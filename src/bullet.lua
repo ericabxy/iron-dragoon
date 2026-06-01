@@ -1,4 +1,4 @@
-local bulletsprite = require('src.bulletsprite')
+local bulletsprite = require('src.iron_plague_bullet_flame_sixteen_way_fx')
 
 local bullet = bulletsprite:new{
   iron_dragoon_type_id = 'bullet',
@@ -11,8 +11,7 @@ local bullet = bulletsprite:new{
 }
 
 function bullet:init()
-  local n = math.floor(math.deg(self.angle) / 45)
-  self.quad = self.quads[n]
+  self:set_sprite_angle(math.deg( self.angle ))
   return self
 end
 
@@ -29,7 +28,7 @@ function bullet:new(o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  return o
+  return o:init()
 end
 
 return bullet

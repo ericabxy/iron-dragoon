@@ -25,13 +25,6 @@ bulletsprite.quads[5] = love.graphics.newQuad(0, 0, 13, 13, 64, 64)
 bulletsprite.quads[6] = love.graphics.newQuad(12, 0, 13, 13, 64, 64)
 bulletsprite.quads[7] = love.graphics.newQuad(24, 0, 13, 13, 64, 64)
 
-function bulletsprite:shift(ox, oy)
-  for _, quad in ipairs(self.quads) do
-    local x, y, w, h = quad:getViewport()
-    quad:setViewport(x, y, w, h)
-  end
-end
-
 function bulletsprite:new(o)
   o = o or {}
   setmetatable(o, self)
