@@ -1,36 +1,30 @@
 local constants = require('src.constants')
+local starship_picket = require('src.starship_picket')
+local starship_scout = require('src.starship_scout')
 local graphics = require('graphics')
 local programs = require('programs')
 local game01 = require('game01')
 local game02 = require('game02')
 
-local bullet_laser = love.audio.newSource('share/sfx_wpn_laser1.wav', 'static')
-
 local globalcooldown = 0
 local players_t = {}
 local bullets_t = {}
 local debris_t = {}
-local player0 = false
+local player0 = starship_scout:new{ x = 128, y = 128, controller_number = 1 }
 local current_game = game01
 
 function love.load()
-  player0 = current_game.start()
+  table.insert(graphics.sprites_layer_2, player0)
+  table.insert(players_t, player0)
 end
 
 function love.update(dt)
-  if love.joystick.isDown(1, RETRO_DEVICE_ID_JOYPAD_LEFT) then
-    player0:rotate(-dt)
-  elseif love.joystick.isDown(1, RETRO_DEVICE_ID_JOYPAD_RIGHT) then
-    player0:rotate(dt)
-  end
-  if love.joystick.isDown(1, RETRO_DEVICE_ID_JOYPAD_UP) then
-    player0:accelerate(dt)
-  end
-  if love.joystick.isDown(1, RETRO_DEVICE_ID_JOYPAD_B) then
-    local bullet = player0:fire_bullet()
-    if bullet then
-      table.insert(bullets_t, programs.spawn_bullet(bullet))
-    end
+  player0:control(dt)
+  player0:move(dt)
+  for i = #bullets_t, 1, -1 do
+    local this_bullet = bullets_t[i]
+    this_bullet:move(dt)
+    if this_bullet.remove_me_from_all_lists then table.remove(bullets_t, i) end
   end
   programs.advance_physics(dt)
   current_game.run(dt)

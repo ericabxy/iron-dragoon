@@ -25,7 +25,7 @@ local iron_plague_pship_fx = sprite:new{
 }
 
 function iron_plague_pship_fx:init()
-  self.quad = self.quads[0]
+  self.quad = self.quads[12]
   return self
 end
 

@@ -7,7 +7,9 @@ local Vector = {
   y = 0,
 }
 
-function Vector:Vector()
+function Vector:Vector(args)
+  self.x = args and args.x or 0
+  self.y = args and args.y or 0
 end
 
 function Vector:set(x, y)
@@ -35,9 +37,20 @@ function Vector:normalize()
   return self.x / d, self.y / d
 end
 
+function Vector:rotate(a)
+  local cos = math.cos(a)
+  local sin = math.sin(a)
+  self.x = cos * self.x - sin * self.y
+  self.y = sin * self.x + cos * self.y
+end
+
 function Vector:scale(s)
   self.x = self.x * s
   self.y = self.y * s
+end
+
+function Vector:vangle()
+  return math.atan2(self.y, self.x) % (math.pi * 2)
 end
 
 function vector.new(...)
