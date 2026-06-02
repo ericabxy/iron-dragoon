@@ -30,7 +30,7 @@ debris_sprite.quads[5] = love.graphics.newQuad(120, 0, 25, 25, 145, 25)
 
 function debris_sprite:animate()
   local fps = 15
-  self.quad = self.quads[math.floor(love.timer.getTime() * fps) % 6]
+  self.quad = self.quads[0] --math.floor(love.timer.getTime() * fps) % 6]
 end
 
 function debris_sprite:play_sfx_explode()

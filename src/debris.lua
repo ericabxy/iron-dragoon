@@ -1,47 +1,52 @@
 --- @module src.debris_sprite
-local debris_sprite = require('src.debris_sprite')
+local iron_plague_debris = require('src.iron_plague_debris')
 local explode2 = require('src.explode2')
 
-local LARGE = 2
-local MEDIUM = 1
-local SMALL = 0
+local LARGE = 'large'
+local MEDIUM = 'medium'
+local SMALL = 'small'
 
 -- class table
-local debris = debris_sprite:new{
-  iron_dragoon_type_id = 'debris',
-  space_width = 256,
-  space_height = 256,
+local debris = iron_plague_debris:new{
+  iron_dragoon_type = 'debris',
+  space_width = 260,
+  space_height = 240,
   size = LARGE,
+  speed = 20,
   dx = 0,
   dy = 0,
 }
 
-function debris:collide_with_bullet(this_bullet)
-  local angle1 = love.math.random() * (2 * math.pi)
-  local angle2 = (angle1 - math.pi) % (2 * math.pi)
-  local spawns = {}
-  self:play_sfx_explode()
-  self.remove_me_from_all_lists = true
-  this_bullet.remove_me_from_all_lists = true
-  table.insert(spawns, explode2:new{ x = self.x, y = self.y })
-  -- Breakup into smaller debris.
-  if self.size == LARGE then
-    table.insert(spawns, debris:new{ size = MEDIUM, x = self.x, y = self.y, angle = angle1 })
-    table.insert(spawns, debris:new{ size = MEDIUM, x = self.x, y = self.y, angle = angle2 })
-  elseif self.size == MEDIUM then
-    table.insert(spawns, debris:new{ size = SMALL, x = self.x, y = self.y, angle = angle1 })
-    table.insert(spawns, debris:new{ size = SMALL, x = self.x, y = self.y, angle = angle2 })
-  end
-  return spawns
-end
-
 function debris:init()
-  local speed = self.size == LARGE and 20 or self.size == MEDIUM and 30 or self.size == SMALL and 40
   local angle = love.math.random() * ( 2 * math.pi )
   self.texture = self.textures[self.size]
-  self.dx = math.cos(angle) * speed 
-  self.dy = math.sin(angle) * speed
+  self.dx = math.cos(angle) * self.speed 
+  self.dy = math.sin(angle) * self.speed
   return self
+end
+
+function debris:check_for_collision_with_bullets(bullets_t)
+  -- TODO: Code debris to handle this check internally.
+end
+
+-- Remove this debris from play and optionally spawn two smaller debris.
+-- Usually called when a bullet hits a debris.
+function debris:destroy()
+  local angle1 = love.math.random() * (2 * math.pi)
+  local angle2 = (angle1 - math.pi) % (2 * math.pi)
+  self.remove_me_from_all_lists = true
+  self:play_sfx_explode()
+  if self.size == LARGE then
+    return {
+      debris:new{ x = self.x, y = self.y, angle = angle1, speed = 30, size = MEDIUM },
+      debris:new{ x = self.x, y = self.y, angle = angle2, speed = 30, size = MEDIUM },
+    }
+  elseif self.size == MEDIUM then
+    return {
+      debris:new{ x = self.x, y = self.y, angle = angle1, speed = 40, size = SMALL },
+      debris:new{ x = self.x, y = self.y, angle = angle2, speed = 40, size = SMALL },
+    }
+  end  
 end
 
 function debris:is_touching_bullet(o)

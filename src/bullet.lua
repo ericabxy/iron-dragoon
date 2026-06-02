@@ -1,19 +1,13 @@
-local bulletsprite = require('src.iron_plague_bullet_flame_sixteen_way_fx')
+local iron_plague_bullet = require('src.iron_plague_bullet')
 
-local bullet = bulletsprite:new{
-  iron_dragoon_type_id = 'bullet',
+local bullet = iron_plague_bullet:new{
+  iron_dragoon_type = 'bullet',
   iron_dragoon_bullet_type = 'flame',
-  space_width = 256,
-  space_height = 256,
-  time_to_live = 750,
-  angle = 0,
+  space_width = 260,
+  space_height = 240,
+  time_to_live = 800,
   speed = 200,
 }
-
-function bullet:init()
-  self:set_sprite_angle(math.deg( self.angle ))
-  return self
-end
 
 function bullet:move(dt)
   self.x = (self.x + math.cos(self.angle) * self.speed * dt) % self.space_width

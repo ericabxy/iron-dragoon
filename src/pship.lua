@@ -1,6 +1,6 @@
 local exhaust2sprite = require('src.exhaust2sprite')
 local pship2fx = require('src.pship2fx')
-local iron_plague_pship_fx = require('src.iron_plague_pship_fx')
+local iron_plague_pship = require('src.iron_plague_pship')
 
 local exhaust_offset = {
   [0] = { x = -19, y = -9 }, { x = -19, y = -13 }, { x = -17, y = -17 }, { x = -13, y = -19 },

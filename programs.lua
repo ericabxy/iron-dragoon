@@ -1,12 +1,8 @@
 local graphics = require('graphics')
 local bullet = require('src.bullet')
 local debris = require('src.debris')
-local exhaust = require('src.exhaust')
 local explode1 = require('src.explode1')
 local explode2 = require('src.explode2')
-local pship = require('src.pship')
-local ship5 = require('src.ship5')
-local sun = require('src.sun')
 
 local explosion_hard = love.audio.newSource('share/sfx_exp_shortest_hard1.wav', 'static')
 
@@ -20,23 +16,7 @@ local bullets_t = {}
 local explodes_t = {}
 local pships_t = {}
 local tractors_t = {}
-
-function programs.add_new_objects_to_lists(t)
-  if type(t) == 'table' then
-    for _, object in ipairs(t) do
-      if object.iron_dragoon_type_id == 'bullet' then
-        table.insert(bullets_t, object)
-        table.insert(graphics.sprites_layer_3, object)
-      elseif object.iron_dragoon_type_id == 'debris' then
-        table.insert(programs.debris_t, object)
-        table.insert(graphics.sprites_layer_2, object)
-      elseif object.iron_dragoon_type_id == 'explosion' then
-        table.insert(explodes_t, object)
-        table.insert(graphics.sprites_layer_3, object)          
-      end
-    end
-  end
-end
+local all_objects_table = {}
 
 function programs.advance_physics(dt)
   for i = #bullets_t, 1, -1 do
@@ -166,6 +146,55 @@ function programs.start_game()
   debris_t = {}
   player0 = programs.spawn_pship{ x = 128, y = 120 }
   graphics.player0 = player0
+end
+
+function programs.add_object_to_all_tables(o)
+  if o.iron_dragoon_type == 'bullet' then
+    table.insert(bullets_t, o)
+    table.insert(all_objects_table, o)
+    table.insert(graphics.sprites_layer_3, o)
+  elseif o.iron_dragoon_type == 'debris' then
+    table.insert(programs.debris_t, o)
+    table.insert(all_objects_table, o)
+    table.insert(graphics.sprites_layer_2, o)
+  elseif o.iron_dragoon_type == 'explosion' then
+    table.insert(explodes_t, o)
+    table.insert(all_objects_table, o)
+    table.insert(graphics.sprites_layer_3, o)          
+  elseif o.iron_dragoon_type == 'playership' then
+    print('adding player ship')
+    table.insert(pships_t, o)
+    table.insert(all_objects_table, o)
+    table.insert(graphics.sprites_layer_1, o)          
+  end
+end
+
+function programs.update(dt)
+  local list_of_newly_spawned_objects = {}
+  for a = #all_objects_table, 1, -1 do
+    local obj_a = all_objects_table[a]
+    obj_a:move(dt)
+    if obj_a.iron_dragoon_type == 'debris' then
+      for b = #bullets_t, 1, -1 do
+        local obj_b = bullets_t[b]
+        if obj_a:is_touching_bullet(obj_b) then
+          local new_debris_t = obj_a:destroy()
+          if type(new_debris_t) == 'table' then
+            for _, new_debris in ipairs(new_debris_t) do
+              table.insert(list_of_newly_spawned_objects, new_debris)
+            end
+          end
+          table.insert(list_of_newly_spawned_objects, explode2:new{ x = obj_a.x, y = obj_a.y })
+          obj_b.remove_me_from_all_lists = true
+        end
+        if obj_b.remove_me_from_all_lists then table.remove(bullets_t, b) end
+      end
+    end
+    if obj_a.remove_me_from_all_lists then table.remove(all_objects_table, a) end
+  end
+  for _, new_object in ipairs(list_of_newly_spawned_objects) do
+    programs.add_object_to_all_tables(new_object)
+  end
 end
 
 return programs

@@ -22,8 +22,8 @@ local iron_plague_bullet_flame_sixteen_way_fx = sprite:new{
     [14] = love.graphics.newQuad(48, 0, 13, 13, 64, 64),
     [15] = love.graphics.newQuad(48, 12, 13, 13, 64, 64),
   },
-  ox = -7,
-  oy = -7,
+  ox = -6,
+  oy = -6,
 }
 
 function iron_plague_bullet_flame_sixteen_way_fx:init()

@@ -42,6 +42,11 @@ pship2fx.quads[13] = love.graphics.newQuad(72, 0, 25, 25, 128, 128)
 pship2fx.quads[14] = love.graphics.newQuad(96, 0, 25, 25, 128, 128)
 pship2fx.quads[15] = love.graphics.newQuad(96, 24, 25, 25, 128, 128)
 
+function pship2fx:init()
+  self.texture = self.textures[0]
+  return self
+end
+
 function pship2fx:play_sfx_bullet_fire()
   if not self.sfx_bullet_fire:isPlaying() then love.audio.play(self.sfx_bullet_fire)
   elseif not self.sfx_bullet_fire2:isPlaying() then love.audio.play(self.sfx_bullet_fire2)
@@ -60,7 +65,7 @@ function pship2fx:new(o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  return o
+  return o:init()
 end
 
 return pship2fx
