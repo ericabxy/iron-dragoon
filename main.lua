@@ -1,16 +1,14 @@
 local constants = require('src.constants')
-local starship_picket = require('src.starship_picket')
-local starship_scout = require('src.starship_scout')
+local player_ship = require('src.player_ship')
 local graphics = require('graphics')
 local programs = require('programs')
 local game01 = require('game01')
 local game02 = require('game02')
 
-local globalcooldown = 0
 local players_t = {}
 local bullets_t = {}
 local debris_t = {}
-local player0 = starship_scout:new{ x = 128, y = 128, controller_number = 1 }
+local player0 = player_ship:new{ x = 128, y = 128, controller_number = 1 }
 local current_game = game01
 
 function love.load()
@@ -19,7 +17,11 @@ function love.load()
 end
 
 function love.update(dt)
-  player0:control(dt)
+  local new_bullet = player0:control(dt)
+  if new_bullet then
+    table.insert(bullets_t, new_bullet)
+    table.insert(graphics.sprites_layer_2, new_bullet)
+  end
   player0:move(dt)
   for i = #bullets_t, 1, -1 do
     local this_bullet = bullets_t[i]

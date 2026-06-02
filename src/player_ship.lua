@@ -1,6 +1,7 @@
 local exhaust2sprite = require('src.exhaust2sprite')
 local pship2fx = require('src.pship2fx')
 local iron_plague_pship_fx = require('src.iron_plague_pship_fx')
+local vector = require('src.vector_sixteen')
 
 local exhaust_offset = {
   [0] = { x = -19, y = -9 }, { x = -19, y = -13 }, { x = -17, y = -17 }, { x = -13, y = -19 },
@@ -20,6 +21,10 @@ local delta_y = {
 
 local pship = pship2fx:new{
   iron_dragoon_type_id = 'playership',
+  thrust_per_second = 150,
+  heading = vector:new(),
+  turn_speed = 4,
+  --
   rotation_angle_sub = 0,
   rotation_angle = 0,
   controller_number = 1,
@@ -45,6 +50,42 @@ function pship:init()
   return self
 end
 
+function pship:control(dt)
+  if self.controller_number < 1 or self.controller_number > 8 then return end
+  if love.joystick.isDown(self.controller_number, RETRO_DEVICE_ID_JOYPAD_UP) then
+    self.dx = self.dx + math.cos(self.heading.angle) * self.thrust_per_second * dt
+    self.dy = self.dy + math.sin(self.heading.angle) * self.thrust_per_second * dt
+    self:sfx_rocket_loop_on()
+    self.exhaust:animate()
+  end
+  if love.joystick.isDown(self.controller_number, RETRO_DEVICE_ID_JOYPAD_LEFT) then
+    self.angle = self.angle - self.turn_speed * dt
+    self.angle = self.angle % (2 * math.pi) 
+    --
+    self.heading:rotate(-self.turn_speed * dt)
+    self.quad = self.quads[self.heading.cardinal]
+    self.exhaust.quad = self.exhaust.quads[self.heading.cardinal]
+  elseif love.joystick.isDown(self.controller_number, RETRO_DEVICE_ID_JOYPAD_RIGHT) then
+    self.angle = self.angle + self.turn_speed * dt
+    self.angle = self.angle % (2 * math.pi)
+    --
+    self.heading:rotate(self.turn_speed * dt)
+    self.quad = self.quads[self.heading.cardinal]
+    self.exhaust.quad = self.exhaust.quads[self.heading.cardinal]
+  end
+  if self.bullet_cooldown_timer <= 0 and love.joystick.isDown(self.controller_number, RETRO_DEVICE_ID_JOYPAD_B) then
+    local bullet_radius = 3
+    self.bullet_cooldown_timer = 350
+    local new_bullet = bullet:new{
+      x = self.x + math.cos(self.heading.angle) * bullet_radius,
+      y = self.y + math.sin(self.heading.angle) * bullet_radius,
+      angle = self.heading.angle
+    }
+    new_bullet.quad = new_bullet.quads[math.floor(self.heading.cardinal / 2)]
+    return new_bullet
+  end
+end
+
 function pship:is_touching(o)
   local hitsize = 7
   local otherhs = 3
@@ -58,7 +99,6 @@ function pship:accelerate(dt)
   local speed = 200
   self.dx = self.dx + delta_x[self.rotation_angle] * speed * dt
   self.dy = self.dy + delta_y[self.rotation_angle] * speed * dt
-  self:sfx_rocket_loop_on()
 end
 
 function pship:fire_bullet()
@@ -79,8 +119,8 @@ function pship:move(dt)
   self.y = (self.y + self.dy * dt) % self.space_height
   self.dx = self.dx * 0.97
   self.dy = self.dy * 0.97
-  self.exhaust.x = self.x
-  self.exhaust.y = self.y
+  self.exhaust.x = self.x - math.cos(self.heading.angle) * 20
+  self.exhaust.y = self.y - math.sin(self.heading.angle) * 20
   self.exhaust.texture = self.exhaust.textures[math.floor(love.timer.getTime() * 15) % 2]
   if self.invincibility_timer > 0 then self.invincibility_timer = self.invincibility_timer - dt * 1000 end
   if not love.joystick.isDown(1, 5) then self:sfx_rocket_loop_off() end

@@ -32,7 +32,7 @@ function game01.run(dt)
   game01.hurry_up_count = game01.hurry_up_count + dt * 1000
   if game01.hurry_up_count > 15000 then
     game01.hurry_up_count = 0
-    programs.spawn_ship_5{ x = -12, y = 40, angle = math.rad(love.math.random( 315, 405 )) }
+    --programs.spawn_ship_5{ x = -12, y = 40, angle = math.rad(love.math.random( 315, 405 )) }
   end
 end
 
