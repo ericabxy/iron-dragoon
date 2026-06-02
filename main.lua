@@ -1,6 +1,7 @@
 local constants = require('src.constants')
 local bullet = require('src.bullet')
 local debris = require('src.debris')
+local pickup_metal = require('src.pickup_metal')
 local player_ship = require('src.player_ship')
 local graphics = require('graphics')
 local programs = require('programs')
@@ -21,6 +22,7 @@ function love.load()
       debris:new{ x = love.math.random(200, 300), y = love.math.random(200, 300) }
     )
   end
+  programs.add_object_to_all_tables(pickup_metal:new{ x = 20, y = 20 })
   table.insert(players_t, player0)
   programs.add_object_to_all_tables(player0)
 end

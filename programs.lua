@@ -161,8 +161,10 @@ function programs.add_object_to_all_tables(o)
     table.insert(explodes_t, o)
     table.insert(all_objects_table, o)
     table.insert(graphics.sprites_layer_3, o)          
+  elseif o.iron_dragoon_type == 'pickup' then
+    table.insert(all_objects_table, o)
+    table.insert(graphics.sprites_layer_2, o)          
   elseif o.iron_dragoon_type == 'playership' then
-    print('adding player ship')
     table.insert(pships_t, o)
     table.insert(all_objects_table, o)
     table.insert(graphics.sprites_layer_1, o)          

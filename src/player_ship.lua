@@ -5,8 +5,8 @@ local player_ship = iron_plague_pship:new{
   controller_number = 1,
   arena_width = 260,
   arena_height = 240,
-  thrust_per_second = 175,
-  turn_speed = 3.5,
+  thrust_per_second = 150,
+  turn_speed = 3.75,
   dx = 0,  -- x velocity (change in x position over delta time)
   dy = 0,  -- y velocity (change in y position over delta time)
   --
