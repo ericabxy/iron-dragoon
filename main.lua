@@ -8,6 +8,7 @@ local programs = require('programs')
 
 local players_t = {}
 local player0 = player_ship:new{ x = 128, y = 128, controller_number = 1 }
+local current_board = 1
 
 function love.load()
   graphics.sprites_layer_0 = {}
@@ -17,11 +18,8 @@ function love.load()
   bullets_t = {}
   debris_t = {}
   players_t = {}
-  for _ = 1, 3 do
-    programs.add_object_to_all_tables(
-      debris:new{ x = love.math.random(200, 300), y = love.math.random(200, 300) }
-    )
-  end
+  programs.reset()
+  programs.start(1)
   programs.add_object_to_all_tables(pickup_metal:new{ x = 20, y = 20 })
   table.insert(players_t, player0)
   programs.add_object_to_all_tables(player0)
@@ -32,8 +30,11 @@ function love.update(dt)
   for _, o in ipairs(spawns) do
     programs.add_object_to_all_tables(o)
   end
-  player0:move(dt)
   programs.update(dt)
+  if #programs.debris_t <= 0 then
+    current_board = current_board + 1
+    programs.start(current_board)
+  end
 end
 
 function love.keypressed(key)

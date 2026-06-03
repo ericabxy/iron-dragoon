@@ -15,13 +15,14 @@ local graphics = {
   sprites_layer_1 = {},
   sprites_layer_2 = {},
   sprites_layer_3 = {},
-  player0 = { hit_points = 64 },
+  player0 = { hit_points = 100 },
   stage_name = {
     'GAME 01',
     'PHYSICS',
     'DEMO',
   },
-  current_score = 0, 
+  current_score = 0,
+  current_stage_number = 1,
 }
 
 graphics.radar = {
@@ -71,9 +72,16 @@ function love.draw()
   -- Hit points
   love.graphics.setColor(255, 0, 0)
   love.graphics.rectangle('fill', 256, 0, graphics.player0.hit_points, 6)
-  -- Score
+  -- Stage Number
   love.graphics.setFont(bitmapfont)
-  love.graphics.print('SCORE: ' .. graphics.current_score, 260, 100)
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.print('LIFE', 256, 128)
+  love.graphics.print(graphics.player0.hit_points, 256, 136)
+  love.graphics.print('STAGE', 256, 144)
+  love.graphics.print(graphics.current_stage_number, 256, 152)
+  -- Score
+  love.graphics.print('SCORE', 256, 160)
+  love.graphics.print(graphics.current_score, 256, 168)
   love.graphics.setColor(8, 48, 14)  --CGA_COLOR_NAME_GREEN)
   love.graphics.rectangle('fill', 256, 176, 64, 64)
   love.graphics.setColor(CGA_COLOR_NAME_LIGHT_GREEN)

@@ -57,9 +57,10 @@ for x = 2, 14, 4 do
   iron_plague_bullet.quads_size_c[x + 1] = iron_plague_bullet.quads_size_c[x]
 end
 
+iron_plague_bullet.quads = iron_plague_bullet.quads_size_a
+iron_plague_bullet.texture = iron_plague_bullet.textures[0]
+
 function iron_plague_bullet:init()
-  self.texture = self.textures[0]
-  self.quads = self.quads_size_a
   self.quad = self.quads[0]
   -- Perform an initial rotation since we don't really steer bullets
   for _ = 1, math.deg(self.angle) / STEP_IN_DEGREES do

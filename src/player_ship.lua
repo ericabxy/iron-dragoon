@@ -1,7 +1,10 @@
 local bullet = require('src.bullet')
 local iron_plague_pship = require('src.iron_plague_pship2')
+local bullet_lv1 = bullet:new{ quads = bullet.quads_size_a }
+local bullet_lv2 = bullet:new{ quads = bullet.quads_size_b }
+local bullet_lv3 = bullet:new{ quads = bullet.quads_size_c }
 
-local BULLETCOOLDOWN = 450
+local BULLETCOOLDOWN = 250
 
 local player_ship = iron_plague_pship:new{
   iron_dragoon_type = 'playership',
@@ -15,7 +18,7 @@ local player_ship = iron_plague_pship:new{
   --
   bullet_cooldown_timer = 0,
   invincibility_timer = 0,
-  hit_points = 64,
+  hit_points = 100,
   score = 0,
 }
 
@@ -53,6 +56,9 @@ function player_ship:move(dt)
   if self.invincibility_timer > 0 then self.invincibility_timer = self.invincibility_timer - dt * 1000 end
   if self.bullet_cooldown_timer > 0 then self.bullet_cooldown_timer = self.bullet_cooldown_timer - dt * 1000 end
   if not love.joystick.isDown(1, 5) then self:sfx_rocket_loop_off() end
+end
+
+function player_ship:increase_weapon_power()
 end
 
 function player_ship:new(o)

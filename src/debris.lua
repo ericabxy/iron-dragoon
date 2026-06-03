@@ -15,6 +15,7 @@ local SMALLVALUE = 100
 -- class table
 local debris = iron_plague_debris:new{
   iron_dragoon_type = 'debris',
+  currently_spawning = true,
   space_width = 260,
   space_height = 240,
   value = LARGEVALUE,
@@ -76,9 +77,11 @@ end
 
 -- Move according to momentum and update graphics
 function debris:move(dt)
-  self.x = (self.x + self.dx * dt) % self.space_width
-  self.y = (self.y + self.dy * dt) % self.space_height
   self:animate(dt)
+  self.x = self.x + self.dx * dt
+  self.y = self.y + self.dy * dt
+  self.x = self.x % self.space_width
+  self.y = self.y % self.space_height
 end
 
 function debris:new(o)
