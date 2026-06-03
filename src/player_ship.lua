@@ -1,9 +1,8 @@
 local cannon = require('src.cannon')
+local coinbank = require('src.coinbank')
 local iron_plague_pship = require('src.iron_plague_pship2')
 local quickturn = require('src.quickturn')
-
-local BULLETCOOLDOWN = 350
-local QUICKTURNCOOLDOWN = 1000
+local shield = require('src.shield')
 
 local player_ship = iron_plague_pship:new{
   iron_dragoon_type = 'playership',
@@ -14,7 +13,7 @@ local player_ship = iron_plague_pship:new{
   dx = 0,  -- x velocity (change in x position over delta time)
   dy = 0,  -- y velocity (change in y position over delta time)
   --
-  invincibility_timer = 0,
+  invulnerable = false,
   hit_points = 100,
 }
 
@@ -24,7 +23,9 @@ function player_ship:new(o)
   self.__index = self
   -- Initialization.
   self.cannon = cannon:new()
+  self.coinbank = coinbank:new()
   self.quickturn = quickturn:new{ destination = .5 * math.pi }
+  self.debris_shield = shield:new{ hitpoints = 100 }
   return o
 end
 
@@ -55,10 +56,10 @@ function player_ship:turn_leftright(left_button, right_button, frac)
   frac = frac or .03  -- Assume a framerate of 30fps unless specified.
   if love.joystick.isDown(self.controller_number, left_button) then
     self:rotate(-turn_speed * frac)
-    self.quickturn_direction = -1  -- "Quickturn" always rotates in the last direction that was pressed.
+    self.quickturn.direction = -1  -- "Quickturn" always rotates in the last direction that was pressed.
   elseif love.joystick.isDown(self.controller_number, right_button) then
     self:rotate(turn_speed * frac)
-    self.quickturn_direction = 1  -- "Quickturn" always rotates in the last direction that was pressed.
+    self.quickturn.direction = 1  -- "Quickturn" always rotates in the last direction that was pressed.
   end
 end
 
@@ -76,7 +77,7 @@ function player_ship:move(dt)
   self.dx = self.dx * 0.98
   self.dy = self.dy * 0.98
   -- Handle ongoing state timers and sound effects.
-  if self.invincibility_timer > 0 then self.invincibility_timer = self.invincibility_timer - dt * 1000 end
+  if self.invulnerable then self.invulnerable = self.invulnerable - dt * 1000 if self.invulnerable < 0 then self.invulnerable = false end end
   self.cannon:cool_down(dt)
   self.quickturn:cool_down(dt)
   if not love.joystick.isDown(1, 5) then self:sfx_rocket_loop_off() end

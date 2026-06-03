@@ -61,6 +61,11 @@ iron_plague_bullet.quads = iron_plague_bullet.quads_size_a
 iron_plague_bullet.texture = iron_plague_bullet.textures[0]
 iron_plague_bullet.quad = iron_plague_bullet.quads[0]
 
+function iron_plague_bullet:is_touching(o)
+  local hitsize = 5
+  if math.abs(self.x - o.x) < hitsize and math.abs(self.y - o.y) < hitsize then return true end
+end
+
 function iron_plague_bullet:set_angle(angle)
   self.angle_in_degrees = math.deg(angle)
   self.cardinal = math.floor(CARDINALS * angle / (2 * math.pi) + CARDINALS + 0.5) % CARDINALS

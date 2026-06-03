@@ -1,6 +1,7 @@
 --- @module src.debris_sprite
 local explode2 = require('src.explode2')
 local iron_plague_debris = require('src.iron_plague_debris')
+local shield = require('src.shield')
 
 local LARGE = 'large'
 local MEDIUM = 'medium'
@@ -21,6 +22,7 @@ local debris = iron_plague_debris:new{
   value = LARGEVALUE,
   size = LARGE,
   speed = LARGESPEED,
+  damage_value = 5,
   dx = 0,
   dy = 0,
 }
@@ -30,6 +32,7 @@ function debris:init()
   self.texture = self.textures[self.size]
   self.dx = self.dx + math.cos(angle) * self.speed 
   self.dy = self.dy + math.sin(angle) * self.speed
+  self.bullet_shield = shield:new{ hitpoints = 100 }
   return self
 end
 
@@ -68,7 +71,7 @@ function debris:destroy()
   end  
 end
 
-function debris:is_touching_bullet(o)
+function debris:is_touching(o)
   local hitsize = 5
   if self.x - hitsize < o.x and self.x + hitsize > o.x and self.y - hitsize < o.y and self.y + hitsize > o.y then
     return true

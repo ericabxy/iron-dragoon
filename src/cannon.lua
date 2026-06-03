@@ -2,7 +2,7 @@
 -- Player ability to fire a space bullet out of a space cannon.
 local bullet = require('src.bullet')
 
-local MAXCOOLDOWN = 400
+local MAXCOOLDOWN = 350
 
 local cannon = {
   radius = 8,  -- Distance to spawn bullet from origin.

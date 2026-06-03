@@ -9,6 +9,9 @@ local programs = require('programs')
 local players_t = {}
 local player0 = player_ship:new{ x = 128, y = 128, controller_number = 1 }
 local current_board = 1
+local background_music = love.audio.newSource('share/TheWzzard_Glaring 5.wav', 'stream')
+--background_music:setLooping(true)
+--love.audio.play(background_music)
 
 function love.load()
   graphics.sprites_layer_0 = {}
@@ -30,10 +33,6 @@ function love.update(dt)
     programs.add_object_to_all_tables(o)
   end
   programs.update(dt)
-  if #programs.debris_t <= 0 then
-    current_board = current_board + 1
-    programs.start(current_board)
-  end
 end
 
 function love.keypressed(key)
