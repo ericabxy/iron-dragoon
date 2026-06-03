@@ -39,6 +39,7 @@ function player_ship:control(dt)
     local bullet_x = self.x + math.cos(self.angle) * bullet_r
     local bullet_y = self.y + math.sin(self.angle) * bullet_r
     self.bullet_cooldown_timer = BULLETCOOLDOWN
+    self:play_sfx_bullet_fire()
     return {
       bullet:new{ x = bullet_x, y = bullet_y, angle = self.angle },
     }

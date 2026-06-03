@@ -2,9 +2,13 @@ local sprite = require('src.sprite')
 
 local CARDINALS = 16
 local STEP_IN_DEGREES = 22.5
+local BULLET_SFX_FILENAME = 'share/sfx_weapon_singleshot21.wav'
 
 local iron_plague_pship = sprite:new{
   sfx_rocket_loop = love.audio.newSource('share/sfx_vehicle_plainloop.wav', 'static'),
+  sfx_bullet_fire = love.audio.newSource(BULLET_SFX_FILENAME, 'static'),
+  sfx_bullet_fire2 = love.audio.newSource(BULLET_SFX_FILENAME, 'static'),
+  sfx_bullet_fire3 = love.audio.newSource(BULLET_SFX_FILENAME, 'static'),
   texture = love.graphics.newImage('share/iron_plague_pship.png'),
   textures = {
     love.graphics.newImage('share/iron_plague_exhaust2_a.png'),
@@ -77,6 +81,12 @@ function iron_plague_pship:rotate(a)
   self.fine_angle_in_degrees = self.fine_angle_in_degrees % STEP_IN_DEGREES
   self.angle_in_degrees = self.angle_in_degrees % 360
   self.angle = math.rad(self.angle_in_degrees)
+end
+
+function iron_plague_pship:play_sfx_bullet_fire()
+  if not self.sfx_bullet_fire:isPlaying() then love.audio.play(self.sfx_bullet_fire)
+  elseif not self.sfx_bullet_fire2:isPlaying() then love.audio.play(self.sfx_bullet_fire2)
+  elseif not self.sfx_bullet_fire3:isPlaying() then love.audio.play(self.sfx_bullet_fire3) end
 end
 
 function iron_plague_pship:sfx_rocket_loop_off()
