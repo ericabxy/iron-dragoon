@@ -1,18 +1,21 @@
 local iron_plague_pship = require('src.iron_plague_pship2')
 
+local BULLETCOOLDOWN = 450
+
 local player_ship = iron_plague_pship:new{
   iron_dragoon_type = 'playership',
   controller_number = 1,
   arena_width = 260,
   arena_height = 240,
   thrust_per_second = 150,
-  turn_speed = 3.75,
+  turn_speed = 4,
   dx = 0,  -- x velocity (change in x position over delta time)
   dy = 0,  -- y velocity (change in y position over delta time)
   --
   bullet_cooldown_timer = 0,
   invincibility_timer = 0,
   hit_points = 64,
+  score = 0,
 }
 
 function player_ship:control(dt)

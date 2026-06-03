@@ -1,18 +1,25 @@
 --- @module src.debris_sprite
-local iron_plague_debris = require('src.iron_plague_debris')
 local explode2 = require('src.explode2')
+local iron_plague_debris = require('src.iron_plague_debris')
 
 local LARGE = 'large'
 local MEDIUM = 'medium'
 local SMALL = 'small'
+local LARGESPEED = 30
+local LARGEVALUE = 25
+local MEDIUMSPEED = 45
+local MEDIUMVALUE = 50
+local SMALLSPEED = 60
+local SMALLVALUE = 100
 
 -- class table
 local debris = iron_plague_debris:new{
   iron_dragoon_type = 'debris',
   space_width = 260,
   space_height = 240,
+  value = LARGEVALUE,
   size = LARGE,
-  speed = 20,
+  speed = LARGESPEED,
   dx = 0,
   dy = 0,
 }
@@ -27,6 +34,11 @@ end
 
 function debris:check_for_collision_with_bullets(bullets_t)
   -- TODO: Code debris to handle this check internally.
+  for i = #bullets_t, 1, -1 do
+    local this_bullet = bullets_t[i]
+    if self:is_touching_bullet(this_bullet) then
+    end
+  end
 end
 
 -- Remove this debris from play and optionally spawn two smaller debris.
@@ -38,13 +50,19 @@ function debris:destroy()
   self:play_sfx_explode()
   if self.size == LARGE then
     return {
-      debris:new{ x = self.x, y = self.y, angle = angle1, speed = 30, size = MEDIUM },
-      debris:new{ x = self.x, y = self.y, angle = angle2, speed = 30, size = MEDIUM },
+      debris:new{ x = self.x, y = self.y, angle = angle1, speed = MEDIUMSPEED, size = MEDIUM, value = MEDIUMVALUE },
+      debris:new{ x = self.x, y = self.y, angle = angle2, speed = MEDIUMSPEED, size = MEDIUM, value = MEDIUMVALUE },
+      explode2:new{ x = self.x, y = self.y },
     }
   elseif self.size == MEDIUM then
     return {
-      debris:new{ x = self.x, y = self.y, angle = angle1, speed = 40, size = SMALL },
-      debris:new{ x = self.x, y = self.y, angle = angle2, speed = 40, size = SMALL },
+      debris:new{ x = self.x, y = self.y, angle = angle1, speed = SMALLSPEED, size = SMALL, value = SMALLVALUE },
+      debris:new{ x = self.x, y = self.y, angle = angle2, speed = SMALLSPEED, size = SMALL, value = SMALLVALUE },
+      explode2:new{ x = self.x, y = self.y },
+    }
+  elseif self.size == SMALL then
+    return {
+      explode2:new{ x = self.x, y = self.y },
     }
   end  
 end

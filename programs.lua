@@ -171,25 +171,34 @@ function programs.add_object_to_all_tables(o)
   end
 end
 
+function check_for_collision_with_bullets(obj)
+  local spawns = {}
+  for i = #bullets_t, 1, -1 do
+    local this_bullet = bullets_t[i]
+    if obj:is_touching_bullet(this_bullet) then
+      graphics.current_score = graphics.current_score + obj.value
+      local newobj_t = obj:destroy()
+      if type(newobj_t) == 'table' then
+        for _, newobj in ipairs(newobj_t) do
+          table.insert(spawns, newobj)
+        end
+      end
+      this_bullet.remove_me_from_all_lists = true
+    end
+    if this_bullet.remove_me_from_all_lists then table.remove(bullets_t, i) end
+  end
+  return spawns
+end
+
 function programs.update(dt)
   local list_of_newly_spawned_objects = {}
   for a = #all_objects_table, 1, -1 do
     local obj_a = all_objects_table[a]
     obj_a:move(dt)
     if obj_a.iron_dragoon_type == 'debris' then
-      for b = #bullets_t, 1, -1 do
-        local obj_b = bullets_t[b]
-        if obj_a:is_touching_bullet(obj_b) then
-          local new_debris_t = obj_a:destroy()
-          if type(new_debris_t) == 'table' then
-            for _, new_debris in ipairs(new_debris_t) do
-              table.insert(list_of_newly_spawned_objects, new_debris)
-            end
-          end
-          table.insert(list_of_newly_spawned_objects, explode2:new{ x = obj_a.x, y = obj_a.y })
-          obj_b.remove_me_from_all_lists = true
-        end
-        if obj_b.remove_me_from_all_lists then table.remove(bullets_t, b) end
+      local spawns = check_for_collision_with_bullets(obj_a) or {}
+      for _, obj in ipairs(spawns) do
+        table.insert(list_of_newly_spawned_objects, obj)
       end
     end
     if obj_a.remove_me_from_all_lists then table.remove(all_objects_table, a) end

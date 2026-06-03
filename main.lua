@@ -36,7 +36,7 @@ function love.update(dt)
     programs.add_object_to_all_tables(
       bullet:new{ x = x, y = y, angle = player0.angle }
     )
-    player0.bullet_cooldown_timer = 500
+    player0.bullet_cooldown_timer = 450
   end
   player0:move(dt)
   programs.update(dt)
