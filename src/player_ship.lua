@@ -1,9 +1,6 @@
-local bullet = require('src.bullet')
+local cannon = require('src.cannon')
 local iron_plague_pship = require('src.iron_plague_pship2')
 local quickturn = require('src.quickturn')
-local bullet_lv1 = bullet:new{ quads = bullet.quads_size_a }
-local bullet_lv2 = bullet:new{ quads = bullet.quads_size_b }
-local bullet_lv3 = bullet:new{ quads = bullet.quads_size_c }
 
 local BULLETCOOLDOWN = 350
 local QUICKTURNCOOLDOWN = 1000
@@ -32,6 +29,7 @@ function player_ship:new(o)
   setmetatable(o, self)
   self.__index = self
   -- Initialization.
+  self.cannon = cannon:new()
   self.quickturn = quickturn:new{ destination = .5 * math.pi }
   return o
 end
@@ -71,15 +69,8 @@ function player_ship:turn_leftright(left_button, right_button, frac)
 end
 
 function player_ship:fire_bullet(fire_button)
-  if self.bullet_cooldown_timer <= 0 and love.joystick.isDown(self.controller_number, fire_button) then
-    local bullet_r = 12
-    local bullet_x = self.x + math.cos(self.angle) * bullet_r
-    local bullet_y = self.y + math.sin(self.angle) * bullet_r
-    self.bullet_cooldown_timer = BULLETCOOLDOWN
-    self:play_sfx_bullet_fire()
-    return {
-      bullet:new{ x = bullet_x, y = bullet_y, angle = self.angle },
-    }
+  if self.cannon.timer <= 0 and love.joystick.isDown(self.controller_number, fire_button) then
+    return self.cannon:fire(self.x, self.y, self.angle)
   end
 end
 
@@ -92,8 +83,8 @@ function player_ship:move(dt)
   self.dy = self.dy * 0.98
   -- Handle ongoing state timers and sound effects.
   if self.invincibility_timer > 0 then self.invincibility_timer = self.invincibility_timer - dt * 1000 end
-  if self.bullet_cooldown_timer > 0 then self.bullet_cooldown_timer = self.bullet_cooldown_timer - dt * 1000 end
-  if self.quickturn.cooldown > 0 then self.quickturn.cooldown = self.quickturn.cooldown - dt * 1000 end
+  self.cannon:cool_down(dt)
+  self.quickturn:cool_down(dt)
   if not love.joystick.isDown(1, 5) then self:sfx_rocket_loop_off() end
 end
 

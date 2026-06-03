@@ -1,3 +1,5 @@
+--- @module src.quickturn
+-- Quickturn is an ability that can attach to a player ship.
 local MAXCOOLDOWN = 1000  -- TODO: Should probably make this configurable (put it in class table).
 
 local quickturn = {
@@ -12,6 +14,10 @@ function quickturn:new(o)
   setmetatable(o, self)
   self.__index = self
   return o
+end
+
+function quickturn:cool_down(dt)
+  if self.cooldown > 0 then self.cooldown = self.cooldown - dt * 1000 else self.cooldown = 0 end
 end
 
 function quickturn:start(destination)
