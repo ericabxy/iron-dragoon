@@ -59,14 +59,13 @@ end
 
 iron_plague_bullet.quads = iron_plague_bullet.quads_size_a
 iron_plague_bullet.texture = iron_plague_bullet.textures[0]
+iron_plague_bullet.quad = iron_plague_bullet.quads[0]
 
-function iron_plague_bullet:init()
-  self.quad = self.quads[0]
-  -- Perform an initial rotation since we don't really steer bullets
-  for _ = 1, math.deg(self.angle) / STEP_IN_DEGREES do
-    self:rotate(math.pi / 8)
-  end
-  return self
+function iron_plague_bullet:set_angle(angle)
+  self.angle_in_degrees = math.deg(angle)
+  self.cardinal = math.floor(CARDINALS * angle / (2 * math.pi) + CARDINALS + 0.5) % CARDINALS
+  self.quad = self.quads[self.cardinal]
+  self.angle = angle
 end
 
 function iron_plague_bullet:rotate(a)
@@ -90,7 +89,7 @@ function iron_plague_bullet:new(o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  return o:init()
+  return o
 end
 
 return iron_plague_bullet

@@ -11,17 +11,11 @@ local player_ship = iron_plague_pship:new{
   arena_width = 256,
   arena_height = 256,
   thrust_per_second = 150,
-  quickturn_speed = 16,
-  quickturn_angle = false,
-  quickturn_direction = 1,
   dx = 0,  -- x velocity (change in x position over delta time)
   dy = 0,  -- y velocity (change in y position over delta time)
   --
-  quickturn_cooldown_timer = 0,
-  bullet_cooldown_timer = 0,
   invincibility_timer = 0,
   hit_points = 100,
-  score = 0,
 }
 
 function player_ship:new(o)
@@ -70,7 +64,7 @@ end
 
 function player_ship:fire_bullet(fire_button)
   if self.cannon.timer <= 0 and love.joystick.isDown(self.controller_number, fire_button) then
-    return self.cannon:fire(self.x, self.y, self.angle)
+    return self.cannon:fire{ x = self.x, y = self.y, angle = self.angle, dx = self.dx, dy = self.dy }
   end
 end
 

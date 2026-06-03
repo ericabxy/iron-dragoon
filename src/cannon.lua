@@ -14,8 +14,8 @@ function cannon:new(o)
   setmetatable(o, self)
   self.__index = self
   -- Initialization.
-  self.sfx_fire1 = love.audio.newSource('share/sfx_weapon_singleshot21.wav', 'static')
-  self.sfx_fire2 = love.audio.newSource('share/sfx_weapon_singleshot21.wav', 'static')
+  o.sfx_fire1 = love.audio.newSource('share/sfx_weapon_singleshot21.wav', 'static')
+  o.sfx_fire2 = love.audio.newSource('share/sfx_weapon_singleshot21.wav', 'static')
   return o
 end
 
@@ -23,16 +23,14 @@ function cannon:cool_down(dt)
   if self.timer > 0 then self.timer = self.timer - dt * 1000 else self.timer = 0 end
 end
 
-function cannon:fire(x, y, angle)
-  x = x + math.cos(angle) * self.radius
-  y = y + math.sin(angle) * self.radius
+function cannon:fire(o)
+  o.x = o.x + math.cos(o.angle) * self.radius
+  o.y = o.y + math.sin(o.angle) * self.radius
   self.timer = MAXCOOLDOWN
   if not self.sfx_fire1:isPlaying() then love.audio.play(self.sfx_fire1)
   elseif not self.sfx_fire2:isPlaying() then love.audio.play(self.sfx_fire2)
   end  -- Play sound effect if either source is available.
-  return {
-    bullet:new{ x = x, y = y, angle = angle },
-  }
+  return { bullet:new(o) }
 end
 
 return cannon
