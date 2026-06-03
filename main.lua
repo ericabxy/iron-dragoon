@@ -28,15 +28,9 @@ function love.load()
 end
 
 function love.update(dt)
-  player0:control(dt)
-  if player0.bullet_cooldown_timer <= 0 and love.joystick.isDown(1, RETRO_DEVICE_ID_JOYPAD_B) then
-    local bullet_radius = 12
-    local x = player0.x + math.cos(player0.angle) * bullet_radius
-    local y = player0.y + math.sin(player0.angle) * bullet_radius
-    programs.add_object_to_all_tables(
-      bullet:new{ x = x, y = y, angle = player0.angle }
-    )
-    player0.bullet_cooldown_timer = 450
+  local spawns = player0:control(dt) or {}
+  for _, o in ipairs(spawns) do
+    programs.add_object_to_all_tables(o)
   end
   player0:move(dt)
   programs.update(dt)

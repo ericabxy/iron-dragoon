@@ -1,3 +1,4 @@
+local bullet = require('src.bullet')
 local iron_plague_pship = require('src.iron_plague_pship2')
 
 local BULLETCOOLDOWN = 450
@@ -29,6 +30,15 @@ function player_ship:control(dt)
     self:rotate(-self.turn_speed * dt)
   elseif love.joystick.isDown(self.controller_number, RETRO_DEVICE_ID_JOYPAD_RIGHT) then
     self:rotate(self.turn_speed * dt)
+  end
+  if self.bullet_cooldown_timer <= 0 and love.joystick.isDown(self.controller_number, RETRO_DEVICE_ID_JOYPAD_B) then
+    local bullet_r = 12
+    local bullet_x = self.x + math.cos(self.angle) * bullet_r
+    local bullet_y = self.y + math.sin(self.angle) * bullet_r
+    self.bullet_cooldown_timer = BULLETCOOLDOWN
+    return {
+      bullet:new{ x = bullet_x, y = bullet_y, angle = self.angle },
+    }
   end
 end
 
