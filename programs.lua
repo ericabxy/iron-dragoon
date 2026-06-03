@@ -4,6 +4,7 @@ local coin = require('src.coin')
 local debris = require('src.debris')
 local explode1 = require('src.explode1')
 local explode2 = require('src.explode2')
+local sfx_coin = love.audio.newSource('share/sfx_coin_cluster7.wav', 'static')
 
 -- functions to handle game logic
 local programs = {
@@ -35,10 +36,10 @@ function programs.reset()
 end
 
 function programs.start(stage_number)
-  local number_of_debris = 4 + math.floor(stage_number / 5)
+  local number_of_debris = math.min(3 + math.floor(stage_number / 2), 10)
   for _ = 1, number_of_debris do
     programs.add_object_to_all_tables(
-      debris:new{ x = love.math.random(256, 260), y = love.math.random(0, 256) }
+      debris:new{ x = love.math.random(0, 256), y = love.math.random(246, 250) }
     )
   end
   graphics.current_stage_number = stage_number
@@ -112,6 +113,7 @@ function programs.update(dt)
       for i = #pships_t, 1, -1 do
         local this_player = pships_t[i]
         if this_player:is_touching(obj_a) then
+          love.audio.play(sfx_coin)
           graphics.current_score = graphics.current_score + obj_a.value
           obj_a.remove_me_from_all_lists = true
         end
@@ -128,7 +130,7 @@ function programs.update(dt)
   if programs.coin_counter >= 550 then
     programs.coin_counter = programs.coin_counter - 550
     programs.add_object_to_all_tables(
-      coin:new{ x = love.math.random(0, 256), y = love.math.random(240, 256), iron_dragoon_coin_type = 'gold', value = 500 }
+      coin:new{ x = love.math.random(0, 256), y = love.math.random(246, 250), iron_dragoon_coin_type = 'gold', value = 500 }
     )
   end
 end

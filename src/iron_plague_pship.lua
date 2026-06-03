@@ -41,6 +41,8 @@ local iron_plague_pship = sprite:new{
   oy = -12,
 }
 
+iron_plague_pship.sfx_rocket_loop:setLooping(true)
+
 function iron_plague_pship:init()
   self.quad = self.quads[12]
   return self

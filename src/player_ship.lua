@@ -4,7 +4,8 @@ local bullet_lv1 = bullet:new{ quads = bullet.quads_size_a }
 local bullet_lv2 = bullet:new{ quads = bullet.quads_size_b }
 local bullet_lv3 = bullet:new{ quads = bullet.quads_size_c }
 
-local BULLETCOOLDOWN = 250
+local BULLETCOOLDOWN = 350
+local QUICKTURNCOOLDOWN = 1000
 
 local player_ship = iron_plague_pship:new{
   iron_dragoon_type = 'playership',
@@ -13,9 +14,13 @@ local player_ship = iron_plague_pship:new{
   arena_height = 256,
   thrust_per_second = 150,
   turn_speed = 4,
+  quickturn_speed = 16,
+  quickturn_angle = false,
+  quickturn_direction = 1,
   dx = 0,  -- x velocity (change in x position over delta time)
   dy = 0,  -- y velocity (change in y position over delta time)
   --
+  quickturn_cooldown_timer = 0,
   bullet_cooldown_timer = 0,
   invincibility_timer = 0,
   hit_points = 100,
@@ -28,11 +33,25 @@ function player_ship:control(dt)
     self.dx = self.dx + math.cos(self.angle) * self.thrust_per_second * dt
     self.dy = self.dy + math.sin(self.angle) * self.thrust_per_second * dt
     self:sfx_rocket_loop_on()
+  elseif love.joystick.isDown(self.controller_number, RETRO_DEVICE_ID_JOYPAD_DOWN) then
+    if self.quickturn_cooldown_timer <= 0 then
+      self.quickturn_cooldown_timer = QUICKTURNCOOLDOWN
+      self.quickturn_angle = (self.angle + math.pi) % (2 * math.pi)
+    end
+    if self.quickturn_angle then
+      if math.abs(self.angle - self.quickturn_angle) < (math.pi / 10) then
+        self.quickturn_angle = false
+      else
+        self:rotate(self.quickturn_speed * dt * self.quickturn_direction)
+      end
+    end
   end
   if love.joystick.isDown(self.controller_number, RETRO_DEVICE_ID_JOYPAD_LEFT) then
     self:rotate(-self.turn_speed * dt)
+    self.quickturn_direction = -1
   elseif love.joystick.isDown(self.controller_number, RETRO_DEVICE_ID_JOYPAD_RIGHT) then
     self:rotate(self.turn_speed * dt)
+    self.quickturn_direction = 1
   end
   if self.bullet_cooldown_timer <= 0 and love.joystick.isDown(self.controller_number, RETRO_DEVICE_ID_JOYPAD_B) then
     local bullet_r = 12
@@ -56,6 +75,7 @@ function player_ship:move(dt)
   -- Handle ongoing state timers and sound effects.
   if self.invincibility_timer > 0 then self.invincibility_timer = self.invincibility_timer - dt * 1000 end
   if self.bullet_cooldown_timer > 0 then self.bullet_cooldown_timer = self.bullet_cooldown_timer - dt * 1000 end
+  if self.quickturn_cooldown_timer > 0 then self.quickturn_cooldown_timer = self.quickturn_cooldown_timer - dt * 1000 end
   if not love.joystick.isDown(1, 5) then self:sfx_rocket_loop_off() end
 end
 

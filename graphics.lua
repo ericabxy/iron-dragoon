@@ -75,7 +75,7 @@ function love.draw()
   -- Stage Number
   love.graphics.setFont(bitmapfont)
   love.graphics.setColor(255, 255, 255)
-  love.graphics.print('LIFE', 256, 128)
+  love.graphics.print('ARMOR', 256, 128)
   love.graphics.print(graphics.player0.hit_points, 256, 136)
   love.graphics.print('STAGE', 256, 144)
   love.graphics.print(graphics.current_stage_number, 256, 152)
