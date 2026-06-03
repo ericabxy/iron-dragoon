@@ -5,19 +5,19 @@ local iron_plague_debris = require('src.iron_plague_debris')
 local LARGE = 'large'
 local MEDIUM = 'medium'
 local SMALL = 'small'
-local LARGESPEED = 30
+local LARGESPEED = 25
+local MEDIUMSPEED = 40
+local SMALLSPEED = 55
 local LARGEVALUE = 25
-local MEDIUMSPEED = 45
 local MEDIUMVALUE = 50
-local SMALLSPEED = 60
 local SMALLVALUE = 100
 
 -- class table
 local debris = iron_plague_debris:new{
   iron_dragoon_type = 'debris',
   currently_spawning = true,
-  space_width = 260,
-  space_height = 240,
+  space_width = 256,
+  space_height = 256,
   value = LARGEVALUE,
   size = LARGE,
   speed = LARGESPEED,
@@ -28,8 +28,8 @@ local debris = iron_plague_debris:new{
 function debris:init()
   local angle = love.math.random() * ( 2 * math.pi )
   self.texture = self.textures[self.size]
-  self.dx = math.cos(angle) * self.speed 
-  self.dy = math.sin(angle) * self.speed
+  self.dx = self.dx + math.cos(angle) * self.speed 
+  self.dy = self.dy + math.sin(angle) * self.speed
   return self
 end
 

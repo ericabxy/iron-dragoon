@@ -1,5 +1,6 @@
 local graphics = require('graphics')
 local bullet = require('src.bullet')
+local coin = require('src.coin')
 local debris = require('src.debris')
 local explode1 = require('src.explode1')
 local explode2 = require('src.explode2')
@@ -8,18 +9,21 @@ local explode2 = require('src.explode2')
 local programs = {
   debris_t = {},
   enemies_t = {},
+  coin_counter = 0,
 }
 
 local bullets_t = {}
 local explodes_t = {}
 local pships_t = {}
 local tractors_t = {}
+local pickups_t = {}
 local all_objects_table = {}
 
 function programs.flush_objects()
   bullets_t = {}
   programs.debris_t = {}
   explodes_t = {}
+  pickups_t = {}
   pships_t = {}
   tractors_t = {}
 end
@@ -32,11 +36,9 @@ end
 
 function programs.start(stage_number)
   local number_of_debris = 4 + math.floor(stage_number / 5)
-  print('Stage ' .. stage_number)
-  print('Number of Debris: ' .. number_of_debris)
   for _ = 1, number_of_debris do
     programs.add_object_to_all_tables(
-      debris:new{ x = love.math.random(259, 261), y = love.math.random(0, 240) }
+      debris:new{ x = love.math.random(256, 260), y = love.math.random(0, 256) }
     )
   end
   graphics.current_stage_number = stage_number
@@ -65,12 +67,24 @@ function programs.add_object_to_all_tables(o)
   end
 end
 
+function check_for_collision_with_pickup(this_player)
+  for i = #pickups_t, 1, -1 do
+    local this_pickup = pickups_t[i]
+    if this_player:is_touching(this_pickup) then
+      graphics.current_score = graphics.current_score + this_pickup.value
+      this_pickup.remove_me_from_all_lists = true
+    end
+    if this_pickup.remove_me_from_all_lists then table.remove(pickups_t, i) end
+  end
+end
+
 function check_for_collision_with_bullets(obj)
   local spawns = {}
   for i = #bullets_t, 1, -1 do
     local this_bullet = bullets_t[i]
     if obj:is_touching_bullet(this_bullet) then
       graphics.current_score = graphics.current_score + obj.value
+      programs.coin_counter = programs.coin_counter + obj.value
       local newobj_t = obj:destroy()
       if type(newobj_t) == 'table' then
         for _, newobj in ipairs(newobj_t) do
@@ -94,6 +108,14 @@ function programs.update(dt)
       for _, obj in ipairs(spawns) do
         table.insert(list_of_newly_spawned_objects, obj)
       end
+    elseif obj_a.iron_dragoon_type == 'pickup' then
+      for i = #pships_t, 1, -1 do
+        local this_player = pships_t[i]
+        if this_player:is_touching(obj_a) then
+          graphics.current_score = graphics.current_score + obj_a.value
+          obj_a.remove_me_from_all_lists = true
+        end
+      end
     end
     if obj_a.remove_me_from_all_lists then table.remove(all_objects_table, a) end
   end
@@ -102,6 +124,12 @@ function programs.update(dt)
   end
   for x = #programs.debris_t, 1, -1 do
     if programs.debris_t[x].remove_me_from_all_lists then table.remove(programs.debris_t, x) end
+  end
+  if programs.coin_counter >= 550 then
+    programs.coin_counter = programs.coin_counter - 550
+    programs.add_object_to_all_tables(
+      coin:new{ x = love.math.random(0, 256), y = love.math.random(240, 256), iron_dragoon_coin_type = 'gold', value = 500 }
+    )
   end
 end
 

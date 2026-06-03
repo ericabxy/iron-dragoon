@@ -20,7 +20,6 @@ function love.load()
   players_t = {}
   programs.reset()
   programs.start(1)
-  programs.add_object_to_all_tables(pickup_metal:new{ x = 20, y = 20 })
   table.insert(players_t, player0)
   programs.add_object_to_all_tables(player0)
 end

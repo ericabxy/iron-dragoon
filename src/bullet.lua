@@ -3,8 +3,8 @@ local iron_plague_bullet = require('src.iron_plague_bullet')
 local bullet = iron_plague_bullet:new{
   iron_dragoon_type = 'bullet',
   iron_dragoon_bullet_type = 'flame',
-  space_width = 260,
-  space_height = 240,
+  space_width = 256,
+  space_height = 256,
   time_to_live = 800,
   speed = 200,
 }

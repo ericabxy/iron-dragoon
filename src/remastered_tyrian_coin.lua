@@ -2,10 +2,10 @@ local sprite = require('src.sprite')
 
 local remastered_tyrian_coin = sprite:new{
   textures = {
-    love.graphics.newImage('share/remastered_tyrian_coin_gold.png'),
-    --love.graphics.newImage('share/remastered_tyrian_coin_silver.png'),
-    --love.graphics.newImage('share/remastered_tyrian_coin_bronze.png'),
-    --love.graphics.newImage('share/remastered_tyrian_coin_copper.png'),
+    gold = love.graphics.newImage('share/remastered_tyrian_coin_gold.png'),
+    steel = love.graphics.newImage('share/remastered_tyrian_coin_steel.png'),
+    bronze = love.graphics.newImage('share/remastered_tyrian_coin_bronze.png'),
+    copper = love.graphics.newImage('share/remastered_tyrian_coin_copper.png'),
   },
   quads = {
     love.graphics.newQuad(0, 0, 13, 13, 128, 16),
@@ -19,7 +19,7 @@ local remastered_tyrian_coin = sprite:new{
   oy = -7,
 }
 
-remastered_tyrian_coin.texture = remastered_tyrian_coin.textures[1]
+remastered_tyrian_coin.texture = remastered_tyrian_coin.textures.gold
 remastered_tyrian_coin.quad = remastered_tyrian_coin.quads[1]
 
 function remastered_tyrian_coin:animate()
